@@ -31,8 +31,8 @@ public class Driver {
 		 * tracker.loadworkoutList(workoutTrackerFile.getAbsolutePath()); }
 		 */
 
-		list.loadExerciseList("C:\\Users\\bjhal\\OneDrive\\Desktop\\ExerciseList.txt");
-		tracker.loadWorkoutList("C:\\Users\\bjhal\\OneDrive\\Desktop\\workoutList.txt");
+		list.loadExerciseList("C:\\Users\\bjhal\\Desktop\\ExerciseList.txt");
+		tracker.loadWorkoutList("C:\\Users\\bjhal\\Desktop\\WorkoutList.txt");
 
 		while (selection != 4) {
 			
@@ -65,8 +65,8 @@ public class Driver {
 			System.out.println();
 		}
 
-		tracker.saveWorkoutList("C:\\Users\\bjhal\\OneDrive\\Desktop\\workoutList.txt");
-		list.saveExerciseList("C:\\Users\\bjhal\\OneDrive\\Desktop\\ExerciseList.txt");
+		tracker.saveWorkoutList("C:\\Users\\bjhal\\Desktop\\WorkoutList.txt");
+		list.saveExerciseList("C:\\Users\\bjhal\\Desktop\\ExerciseList.txt");
 
 		/*
 		 * if(exerciseListFile != null) {

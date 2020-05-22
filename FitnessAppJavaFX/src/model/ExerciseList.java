@@ -178,25 +178,25 @@ public class ExerciseList  {
 
 			writer.println("Back Exercises:");
 			for (Exercise exercise : this.backList) {
-				writer.println(exercise.exerciseName);
+				writer.println("    " + exercise.exerciseName);
 			}
 
-			writer.println("Chest Exercises:");
+			writer.println("\nChest Exercises:");
 
 			for (Exercise exercise : this.chestList) {
-				writer.println(exercise.exerciseName);
+				writer.println("    " + exercise.exerciseName);
 			}
 
-			writer.println("Leg Exercises:");
+			writer.println("\nLeg Exercises:");
 
 			for (Exercise exercise : this.legsList) {
-				writer.println(exercise.exerciseName);
+				writer.println("    " + exercise.exerciseName);
 			}
 
-			writer.println("Shoulder Exercises:");
+			writer.println("\nShoulder Exercises:");
 
 			for (Exercise exercise : this.shouldersList) {
-				writer.println(exercise.exerciseName);
+				writer.println("    " + exercise.exerciseName);
 			}
 
 			writer.close();
@@ -229,30 +229,36 @@ public class ExerciseList  {
 
 			String current = scanner.nextLine();
 
-			while (!current.equals("Chest Exercises:")) {
+			while (!current.isEmpty()) {
 				current = scanner.nextLine();
-				if (!current.equals("Chest Exercises:")) {
-					this.backList.add(new Exercise(current, "Back"));
+				if (!current.equals("Chest Exercises:") && !current.isEmpty()) {
+					this.backList.add(new Exercise(current.trim(), "Back"));
 				}
 			}
+			
+			current = scanner.nextLine();
 
-			while (!current.equals("Leg Exercises:")) {
+			while (!current.isEmpty()) {
 				current = scanner.nextLine();
-				if (!current.equals("Leg Exercises:")) {
-					this.chestList.add(new Exercise(current, "Chest"));
+				if (!current.equals("Leg Exercises:")  && !current.isEmpty()) {
+					this.chestList.add(new Exercise(current.trim(), "Chest"));
 				}
 			}
+			
+			current = scanner.nextLine();
 
-			while (!current.equals("Shoulder Exercises:")) {
+			while (!current.isEmpty()) {
 				current = scanner.nextLine();
-				if (!current.equals("Shoulder Exercises:")) {
-					this.legsList.add(new Exercise(current, "Legs"));
+				if (!current.equals("Shoulder Exercises:") && !current.isEmpty()) {
+					this.legsList.add(new Exercise(current.trim(), "Legs"));
 				}
 			}
+			
+			current = scanner.nextLine();
 
 			while (scanner.hasNextLine()) {
 				current = scanner.nextLine();
-				this.shouldersList.add(new Exercise(current, "Shoulders"));
+				this.shouldersList.add(new Exercise(current.trim(), "Shoulders"));
 
 			}
 			

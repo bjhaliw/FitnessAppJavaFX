@@ -45,8 +45,8 @@ public class GUIDriver extends Application {
 
 		this.window = primaryStage;
 
-		this.list.loadExerciseList("C:\\Users\\bjhal\\OneDrive\\Desktop\\ExerciseList.txt");
-		this.tracker.loadWorkoutList("C:\\Users\\bjhal\\OneDrive\\Desktop\\WorkoutList.txt");
+		this.list.loadExerciseList("C:\\Users\\bjhal\\Desktop\\ExerciseList.txt");
+		this.tracker.loadWorkoutList("C:\\Users\\bjhal\\Desktop\\WorkoutList.txt");
 
 		this.pane.backgroundProperty()
 				.set(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -98,8 +98,8 @@ public class GUIDriver extends Application {
 
 		save.setOnAction(e -> {
 			try {
-				this.tracker.saveWorkoutList("C:\\Users\\bjhal\\OneDrive\\Desktop\\WorkoutList.txt");
-				this.list.saveExerciseList("C:\\Users\\bjhal\\OneDrive\\Desktop\\ExerciseList.txt");
+				this.tracker.saveWorkoutList("C:\\Users\\bjhal\\Desktop\\WorkoutList.txt");
+				this.list.saveExerciseList("C:\\Users\\bjhal\\Desktop\\ExerciseList.txt");
 			} catch (FileNotFoundException | UnsupportedEncodingException e1) {
 				e1.printStackTrace();
 			}

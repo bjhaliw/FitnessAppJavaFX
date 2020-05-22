@@ -2,6 +2,11 @@ package model;
 
 import java.util.Scanner;
 
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+
 public class WorkoutTrackerController {
 
 	public static void workoutTrackerOptions(WorkoutTracker tracker, ExerciseList list, Scanner scanner) {
@@ -177,9 +182,9 @@ public class WorkoutTrackerController {
 				name = list.getBackExercises().get(exerciseSelection - 1).getExerciseName();
 				
 				if(numSelection == 1) {
-					viewMaxWeightAux(tracker, name);
+					viewMaxWeightAux(scanner, tracker, name);
 				} else if (numSelection == 2) {
-					viewMaxRepsAux(tracker, name);
+					viewMaxRepsAux(scanner, tracker, name);
 				}
 
 				break;
@@ -191,9 +196,9 @@ public class WorkoutTrackerController {
 				name = list.getChestExercises().get(exerciseSelection - 1).getExerciseName();
 				
 				if(numSelection == 1) {
-					viewMaxWeightAux(tracker, name);
+					viewMaxWeightAux(scanner, tracker, name);
 				} else if (numSelection == 2) {
-					viewMaxRepsAux(tracker, name);
+					viewMaxRepsAux(scanner, tracker, name);
 				}
 
 				break;
@@ -205,9 +210,9 @@ public class WorkoutTrackerController {
 				name = list.getLegsExercises().get(exerciseSelection - 1).getExerciseName();
 				
 				if(numSelection == 1) {
-					viewMaxWeightAux(tracker, name);
+					viewMaxWeightAux(scanner, tracker, name);
 				} else if (numSelection == 2) {
-					viewMaxRepsAux(tracker, name);
+					viewMaxRepsAux(scanner, tracker, name);
 				}
 
 				break;
@@ -218,9 +223,9 @@ public class WorkoutTrackerController {
 				name = list.getChestExercises().get(exerciseSelection - 1).getExerciseName();
 				
 				if(numSelection == 1) {
-					viewMaxWeightAux(tracker, name);
+					viewMaxWeightAux(scanner, tracker, name);
 				} else if (numSelection == 2) {
-					viewMaxRepsAux(tracker, name);
+					viewMaxRepsAux(scanner, tracker, name);
 				}
 				
 				break;
@@ -243,7 +248,7 @@ public class WorkoutTrackerController {
 	 * @param name
 	 * @return
 	 */
-	public static void viewMaxWeightAux(WorkoutTracker tracker, String name) {
+	public static void viewMaxWeightAux(Scanner scanner, WorkoutTracker tracker, String name) {
 		double maxWeight = Integer.MIN_VALUE; // Minimum weight so user weight is always higher
 
 		for (Workout workout : tracker.getWorkoutList()) { // Looking through the workouts
@@ -262,12 +267,14 @@ public class WorkoutTrackerController {
 			System.out.println(name + " was not found");
 		} else {
 			System.out.println("The maximum weight for " + name + " is: " + maxWeight);
+			System.out.println("Would you like to see a graph of max weight for each workout for this exercise?");
+			System.out.print("Type 1 to see a graph or 2 to return to menu: ");
 		}
 		
 		System.out.println();
 	}
 
-	public static void viewMaxRepsAux(WorkoutTracker tracker, String name) {		
+	public static void viewMaxRepsAux(Scanner scanner, WorkoutTracker tracker, String name) {		
 		double maxReps = Integer.MIN_VALUE; // Minimum reps so user reps are always higher
 
 		for (Workout workout : tracker.getWorkoutList()) { // Looking through the workouts
@@ -286,7 +293,63 @@ public class WorkoutTrackerController {
 			System.out.println(name + " was not found");
 		} else {
 			System.out.println("The maximum reps for " + name + " is: " + maxReps);
+			System.out.println("Would you like to see a graph of max reps for each workout for this exercise?");
+			System.out.print("Type 1 to see a graph or 2 to return to menu: ");
 		}
+	}
+	
+	
+	
+	/**
+	 * This method will allow the user to see a graph of their progress through JavaFX
+	 * @param name
+	 * @return
+	 */
+	public static LineChart<String, Number> createGraph(WorkoutTracker tracker, String name, int choice) {
+		double maxWeight = 0;
+		double totalMax = 0;
+		double minWeight = 1000;
+
+		// defining a series
+		XYChart.Series series = new XYChart.Series();
+		series.setName("Max Weight Per Workout");
+
+		for (Workout Workout : tracker.getWorkoutList()) {
+			for (Exercise current : Workout.getExerciseArrayList()) {
+				if (current.getExerciseName().equals(name)) {
+					for (Set set : current.getSetList()) {
+						if (set.getWeight() < minWeight) {
+							minWeight = set.getWeight();
+						}
+
+						if (set.getWeight() > maxWeight) {
+							maxWeight = set.getWeight();
+						}
+
+						if (set.getWeight() > totalMax) {
+							totalMax = set.getWeight();
+						}
+					}
+
+					series.getData()
+							.add(new XYChart.Data(Workout.getStartTime().toString().substring(0, 10), maxWeight));
+
+					maxWeight = 0;
+				}
+			}
+		}
+
+		final CategoryAxis xAxis = new CategoryAxis();
+		final NumberAxis yAxis = new NumberAxis(minWeight - 10, totalMax + 10, 5);
+		xAxis.setLabel("Date");
+		yAxis.setLabel("Weight (lbs");
+
+		final LineChart<String, Number> lineChart = new LineChart<>(xAxis, yAxis);
+		lineChart.setTitle(name);
+
+		lineChart.getData().add(series);
+
+		return lineChart;
 	}
 
 }
