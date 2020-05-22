@@ -27,22 +27,35 @@ import java.util.Comparator;
  */
 public class ExerciseList  {
 
+	ArrayList<Exercise> absList;
 	ArrayList<Exercise> backList;
-	ArrayList<Exercise> shouldersList;
+	ArrayList<Exercise> bicepsList;
+	ArrayList<Exercise> cardioList;
 	ArrayList<Exercise> chestList;
 	ArrayList<Exercise> legsList;
+	ArrayList<Exercise> shouldersList;
+	ArrayList<Exercise> tricepsList;
+
+	static final int ABS = 1;
+	static final int BACK = 2;
+	static final int BICEPS = 3;
+	static final int CARDIO = 4;
+	static final int CHEST = 5;
+	static final int LEGS = 6;
+	static final int SHOULDERS = 7;
+	static final int TRICEPS = 8;
+
 	
-	static final int BACK = 1;
-	static final int CHEST = 2;
-	static final int LEGS = 3;
-	static final int SHOULDERS = 4;
 
 	public ExerciseList() {
-		backList = new ArrayList<Exercise>();
-		shouldersList = new ArrayList<>();
+		absList = new ArrayList<>();
+		backList = new ArrayList<>();
+		bicepsList = new ArrayList<>();
+		cardioList = new ArrayList<>();
 		chestList = new ArrayList<>();
 		legsList = new ArrayList<>();
-
+		shouldersList = new ArrayList<>();
+		tricepsList = new ArrayList<>();
 	}
 
 	/**
@@ -54,63 +67,78 @@ public class ExerciseList  {
 	 */
 	public ArrayList<Exercise> addExercise(Exercise exercise) {
 
-		// Checks to see if the backList contains the exercise already
-		if (exercise.getExerciseType().equals("Back")) {
-			for (Exercise current : this.backList) {
-				if (current.getExerciseName().equals(exercise.getExerciseName())) {
-					System.out.println("Exercise already exists");
-					return this.backList;
-				}
-			}
-
-			this.backList.add(exercise);
+		// CHECK ABS LIST
+		if (exercise.getExerciseType().equals("Abs")) {
+			addExerciseAux(exercise, this.absList);
+			return this.absList;
+		}
+		
+		// CHECK BACK LIST
+		if (exercise.getExerciseType().equals("Back")) {		
+			addExerciseAux(exercise, this.backList);
 			return this.backList;
-
+		}
+		
+		// CHECK BICEPS LIST
+		if (exercise.getExerciseType().equals("Biceps")) {
+			addExerciseAux(exercise, this.bicepsList);
+			return this.bicepsList;
+		}
+		
+		// CHECK CARDIO LIST
+		if (exercise.getExerciseType().equals("Cardio")) {
+			addExerciseAux(exercise, this.cardioList);
+			return this.cardioList;
 		}
 
-		// Checks to see if the chestList contains the exercise already
+		// CHECK CHEST LIST
 		if (exercise.getExerciseType().equals("Chest")) {
-			for (Exercise current : this.chestList) {
-				if (current.getExerciseName().equals(exercise.getExerciseName())) {
-					System.out.println("Exercise already exists");
-					return this.chestList;
-				}
-			}
-
-			this.chestList.add(exercise);
+			addExerciseAux(exercise, this.chestList);
 			return this.chestList;
-
 		}
 
-		// Checks to see if the legsList contains the exercise already
+		// CHECK LEGS LIST
 		if (exercise.getExerciseType().equals("Legs")) {
-			for (Exercise current : this.legsList) {
-				if (current.getExerciseName().equals(exercise.getExerciseName())) {
-					System.out.println("Exercise already exists");
-					return this.legsList;
-				}
-			}
-
-			this.legsList.add(exercise);
+			addExerciseAux(exercise, this.legsList);
 			return this.legsList;
-
 		}
 
-		// Checks to see if the shouldersList contains the exercise already
+		// CHECK SHOULDERS LIST
 		if (exercise.getExerciseType().equals("Shoulders")) {
-			for (Exercise current : this.shouldersList) {
-				if (current.getExerciseName().equals(exercise.getExerciseName())) {
-					System.out.println("Exercise already exists");
-					return this.shouldersList;
-				}
-			}
-
-			this.shouldersList.add(exercise);
+			addExerciseAux(exercise, this.shouldersList);
 			return this.shouldersList;
-
+		}
+		
+		
+		// CHECK TRICEPS LIST
+		if (exercise.getExerciseType().equals("Triceps")) {
+			addExerciseAux(exercise, this.tricepsList);
+			return this.tricepsList;
 		}
 
 		return null;
+
+	}
+	
+	/**
+	 * This method checks the specified exercise list to see if an exercise
+	 * that is trying to be added already exists. Returns true if exercise
+	 * is present and false if exercise of that name is present.
+	 * @param exerciseType
+	 * @param list
+	 */
+	private void addExerciseAux(Exercise exercise, ArrayList<Exercise> list) {
+		
+		for (Exercise current : list) {
+			if (current.getExerciseName().equals(exercise.getExerciseName())) {
+				System.out.println("Exercise already exists");
+				return;
+			}
+		}
+		
+		list.add(exercise);
+		Collections.sort(list);
+		System.out.println("" + exercise.getExerciseName() + " successfully added!");
 
 	}
 
@@ -122,47 +150,58 @@ public class ExerciseList  {
 	 */
 	public ArrayList<Exercise> removeExercise(Exercise exercise) {
 
-		if (exercise.getExerciseType().equals("Shoulders")) {
-			for (Exercise current : this.shouldersList) {
-				if (current.getExerciseName().equals(exercise.getExerciseName())) {
-					this.shouldersList.remove(current);
-					System.out.println(current.getExerciseName() + " has been removed.");
-					return this.shouldersList;
-				}
-			}
-		}
 
-		if (exercise.getExerciseType().equals("Legs")) {
-			for (Exercise current : this.legsList) {
-				if (current.getExerciseName().equals(exercise.getExerciseName())) {
-					this.legsList.remove(current);
-					System.out.println(current.getExerciseName() + " has been removed.");
-					return this.legsList;
-				}
-			}
+		if (exercise.getExerciseType().equals("Abs")) {
+			removeExerciseAux(exercise, absList);
+			return this.absList;
 		}
-
-		if (exercise.getExerciseType().equals("Chest")) {
-			for (Exercise current : this.chestList) {
-				if (current.getExerciseName().equals(exercise.getExerciseName())) {
-					this.chestList.remove(current);
-					System.out.println(current.getExerciseName() + " has been removed.");
-					return this.chestList;
-				}
-			}
-		}
-
+		
 		if (exercise.getExerciseType().equals("Back")) {
-			for (Exercise current : this.backList) {
-				if (current.getExerciseName().equals(exercise.getExerciseName())) {
-					this.backList.remove(current);
-					System.out.println(current.getExerciseName() + " has been removed.");
-					return this.backList;
-				}
-			}
+			removeExerciseAux(exercise, backList);
+			return this.backList;
+		}
+		
+		if (exercise.getExerciseType().equals("Biceps")) {
+			removeExerciseAux(exercise, bicepsList);
+			return this.bicepsList;
+		}
+		
+		if (exercise.getExerciseType().equals("Cardio")) {
+			removeExerciseAux(exercise, cardioList);
+			return this.cardioList;
+		}
+		
+		if (exercise.getExerciseType().equals("Chest")) {
+			removeExerciseAux(exercise, chestList);
+			return this.chestList;
+		}	
+		
+		if (exercise.getExerciseType().equals("Legs")) {
+			removeExerciseAux(exercise, legsList);
+			return this.legsList;
+		}
+		
+		if (exercise.getExerciseType().equals("Shoulders")) {
+			removeExerciseAux(exercise, shouldersList);
+			return this.shouldersList;
+		}
+
+		if (exercise.getExerciseType().equals("Triceps")) {
+			removeExerciseAux(exercise, tricepsList);
+			return this.tricepsList;
 		}
 
 		return null;
+	}
+	
+	private void removeExerciseAux(Exercise exercise, ArrayList<Exercise> list) {
+		for (Exercise current : list) {
+			if (current.getExerciseName().equals(exercise.getExerciseName())) {
+				list.remove(current);
+				System.out.println(current.getExerciseName() + " has been removed.");
+				return;
+			}
+		}
 	}
 
 	/**
@@ -176,28 +215,29 @@ public class ExerciseList  {
 		try {
 			PrintWriter writer = new PrintWriter(fileName, "UTF-8");
 
-			writer.println("Back Exercises:");
-			for (Exercise exercise : this.backList) {
-				writer.println("    " + exercise.exerciseName);
-			}
+			writer.println("Exercise Type: Abs");
+			saveExercistListAux(writer, absList);
+			
+			writer.println("\nExercise Type: Back");
+			saveExercistListAux(writer, backList);
+			
+			writer.println("\nExercise Type: Biceps");
+			saveExercistListAux(writer, bicepsList);
+			
+			writer.println("\nExercise Type: Cardio");
+			saveExercistListAux(writer, cardioList);
 
-			writer.println("\nChest Exercises:");
+			writer.println("\nExercise Type: Chest");
+			saveExercistListAux(writer, chestList);
 
-			for (Exercise exercise : this.chestList) {
-				writer.println("    " + exercise.exerciseName);
-			}
+			writer.println("\nExercise Type: Legs");
+			saveExercistListAux(writer, legsList);
 
-			writer.println("\nLeg Exercises:");
-
-			for (Exercise exercise : this.legsList) {
-				writer.println("    " + exercise.exerciseName);
-			}
-
-			writer.println("\nShoulder Exercises:");
-
-			for (Exercise exercise : this.shouldersList) {
-				writer.println("    " + exercise.exerciseName);
-			}
+			writer.println("\nExercise Type: Shoulders");
+			saveExercistListAux(writer, shouldersList);
+			
+			writer.println("\nExercise Type: Triceps");
+			saveExercistListAux(writer, tricepsList);
 
 			writer.close();
 
@@ -206,6 +246,12 @@ public class ExerciseList  {
 			return;
 		}
 
+	}
+	
+	private void saveExercistListAux(PrintWriter writer, ArrayList<Exercise> list) {
+		for (Exercise exercise : list) {
+			writer.println("    " + exercise.exerciseName);
+		}
 	}
 
 	/**
@@ -222,44 +268,39 @@ public class ExerciseList  {
 			scanner = new Scanner(file);
 
 			if (scanner.hasNextLine() == false) {
-				createStandardList();
+				createStandardList(); // File was empty so create a standard exercise List
 				scanner.close();
 				return;
 			}
 
-			String current = scanner.nextLine();
-
-			while (!current.isEmpty()) {
-				current = scanner.nextLine();
-				if (!current.equals("Chest Exercises:") && !current.isEmpty()) {
-					this.backList.add(new Exercise(current.trim(), "Back"));
-				}
-			}
+			String current = "";
+			String exerciseType = "";
 			
-			current = scanner.nextLine();
-
-			while (!current.isEmpty()) {
+			while(scanner.hasNextLine()) {
 				current = scanner.nextLine();
-				if (!current.equals("Leg Exercises:")  && !current.isEmpty()) {
-					this.chestList.add(new Exercise(current.trim(), "Chest"));
-				}
-			}
-			
-			current = scanner.nextLine();
-
-			while (!current.isEmpty()) {
-				current = scanner.nextLine();
-				if (!current.equals("Shoulder Exercises:") && !current.isEmpty()) {
-					this.legsList.add(new Exercise(current.trim(), "Legs"));
-				}
-			}
-			
-			current = scanner.nextLine();
-
-			while (scanner.hasNextLine()) {
-				current = scanner.nextLine();
-				this.shouldersList.add(new Exercise(current.trim(), "Shoulders"));
-
+				
+				if (current.contains("Exercise Type: ")) {
+					exerciseType = current.substring(15);
+				} else if (!current.isEmpty()) {
+					
+					if (exerciseType.equals("Abs")) {
+						this.absList.add(new Exercise(current.trim(), exerciseType));
+					} else if (exerciseType.equals("Back")) {
+						this.backList.add(new Exercise(current.trim(), exerciseType));
+					} else if (exerciseType.equals("Biceps")) {
+						this.bicepsList.add(new Exercise(current.trim(), exerciseType));
+					} else if (exerciseType.equals("Cardio")) {
+						this.cardioList.add(new Exercise(current.trim(), exerciseType));
+					} else if (exerciseType.equals("Chest")) {
+						this.chestList.add(new Exercise(current.trim(), exerciseType));
+					} else if (exerciseType.equals("Legs")) {
+						this.legsList.add(new Exercise(current.trim(), exerciseType));
+					} else if (exerciseType.equals("Shoulders")) {
+						this.shouldersList.add(new Exercise(current.trim(), exerciseType));
+					} else if (exerciseType.equals("Triceps")) {
+						this.tricepsList.add(new Exercise(current.trim(), exerciseType));
+					}
+				}			
 			}
 			
 			scanner.close();
@@ -275,26 +316,83 @@ public class ExerciseList  {
 	 * already exist.
 	 */
 	public void createStandardList() {
-
+		
+		//////////////ABS EXERCISES //////////////
+		this.absList.add(new Exercise("Crunch", "Abs"));
+		this.absList.add(new Exercise("Hanging Knee Raise", "Abs"));
+		this.absList.add(new Exercise("Russian Twists", "Abs"));
+		this.absList.add(new Exercise("Hanging Leg Raise", "Abs"));
+		this.absList.add(new Exercise("Sit Up", "Abs"));
+		this.absList.add(new Exercise("Plank", "Abs"));
+		
+		////////////// BACK EXERCISES //////////////
 		this.backList.add(new Exercise("Pull Up", "Back"));
+		this.backList.add(new Exercise("Chin Up", "Back"));
 		this.backList.add(new Exercise("Barbell Row", "Back"));
 		this.backList.add(new Exercise("T-Bar Row", "Back"));
 		this.backList.add(new Exercise("Straight Arm Cable Pushdown", "Back"));
-		this.backList.add(new Exercise("This is the standard list", "Back"));
+		this.backList.add(new Exercise("Barbell Deadlift", "Back"));
+		this.backList.add(new Exercise("Trapbar Deadlift", "Back"));
+		this.backList.add(new Exercise("Lat Pulldown", "Back"));
+		this.backList.add(new Exercise("Dumbell Shrug", "Back"));
+		this.backList.add(new Exercise("Barbell Shrug", "Back"));
+		this.backList.add(new Exercise("Cable Row", "Back"));
+		
+		//////////////BICEPS EXERCISES //////////////
+		this.bicepsList.add(new Exercise("Dumbell Curl", "Biceps"));
+		this.bicepsList.add(new Exercise("Cable Curl", "Biceps"));
+		this.bicepsList.add(new Exercise("Hammer Curl", "Biceps"));
+		this.bicepsList.add(new Exercise("Barbell Curl", "Biceps"));
+		
+		//////////////CARDIO EXERCISES //////////////
+		this.cardioList.add(new Exercise("Treadmill Running", "Cardio"));
+		this.cardioList.add(new Exercise("Treadmill Walking", "Cardio"));
+		this.cardioList.add(new Exercise("Outside Running", "Cardio"));
+		this.cardioList.add(new Exercise("Outside Walking", "Cardio"));
+		this.cardioList.add(new Exercise("Elliptical Trainer", "Cardio"));
+		this.cardioList.add(new Exercise("Outside Biking", "Cardio"));
+		this.cardioList.add(new Exercise("Stationary Biking", "Cardio"));
+		this.cardioList.add(new Exercise("Stair Stepper", "Cardio"));
 
+		//////////////CHEST EXERCISES //////////////
 		this.chestList.add(new Exercise("Flat Barbell Bench Press", "Chest"));
 		this.chestList.add(new Exercise("Flat Dumbell Flies", "Chest"));
 		this.chestList.add(new Exercise("Incline Barbell Bench Press", "Chest"));
 		this.chestList.add(new Exercise("Flat Cable Flies", "Chest"));
+		this.chestList.add(new Exercise("Incline Cable Flies", "Chest"));
+		this.chestList.add(new Exercise("High Cable Crossover", "Chest"));
 
+		//////////////LEGS EXERCISES //////////////
 		this.legsList.add(new Exercise("Barbell Squat", "Legs"));
 		this.legsList.add(new Exercise("Good Mornings", "Legs"));
-		this.legsList.add(new Exercise("Dumbell Lunget", "Legs"));
+		this.legsList.add(new Exercise("Dumbell Lunge", "Legs"));
 		this.legsList.add(new Exercise("Barbell Calf Raise", "Legs"));
-
+		this.legsList.add(new Exercise("Cable Hip Abduction", "Legs"));
+		this.legsList.add(new Exercise("Cable Hip Adduction", "Legs"));
+		this.legsList.add(new Exercise("Cable Hip Thrust", "Legs"));
+		this.legsList.add(new Exercise("Romanian Deadlift", "Legs"));
+		
+		//////////////SHOULDERS EXERCISES //////////////
 		this.shouldersList.add(new Exercise("Overhead Press", "Shoulders"));
 		this.shouldersList.add(new Exercise("Lateral Dumbell Raise", "Shoulders"));
 		this.shouldersList.add(new Exercise("Front Dumbell Raise", "Shoulders"));
+		this.shouldersList.add(new Exercise("Cable Lateral Raise", "Shoulders"));
+		this.shouldersList.add(new Exercise("Dumbell Shoulder Press", "Shoulders"));
+		this.shouldersList.add(new Exercise("Cable Face Pull", "Shoulders"));
+		
+		//////////////TRICEPS EXERCISES //////////////
+		this.tricepsList.add(new Exercise("Overhead Cable Extension", "Triceps"));
+		this.tricepsList.add(new Exercise("Cable Rope Pushdown", "Triceps"));
+		this.tricepsList.add(new Exercise("Dumbell Skullcrushers", "Triceps"));
+		
+		Collections.sort(this.absList);	
+		Collections.sort(this.backList);
+		Collections.sort(this.bicepsList);	
+		Collections.sort(this.cardioList);	
+		Collections.sort(this.chestList);
+		Collections.sort(this.legsList);
+		Collections.sort(this.shouldersList);
+		Collections.sort(this.tricepsList);	
 
 	}
 
@@ -306,104 +404,132 @@ public class ExerciseList  {
 	 */
 	public String printExerciseList(int selection) {
 		String output = "";
-		int i = 1;
 
-		if (selection == ExerciseList.BACK) {
-			for (Exercise exercise : this.backList) {
-				output += i + ": " + exercise.exerciseName + "\n";
-				i++;
-			}
+		if (selection == ExerciseList.ABS) {
+			output = printExerciseListAux(absList);
+		} else if (selection == ExerciseList.BACK) {
+			output = printExerciseListAux(backList);
+		} else if (selection == ExerciseList.BICEPS) {
+			output = printExerciseListAux(bicepsList);
+		} else if (selection == ExerciseList.CARDIO) {
+			output = printExerciseListAux(cardioList);
 		} else if (selection == ExerciseList.CHEST) {
-			for (Exercise exercise : this.chestList) {
-				output += i + ": " + exercise.exerciseName + "\n";
-				i++;
-			}
+			output = printExerciseListAux(chestList);
 		} else if (selection == ExerciseList.LEGS) {
-			for (Exercise exercise : this.legsList) {
-				output += i + ": " + exercise.exerciseName + "\n";
-				i++;
-			}
+			output = printExerciseListAux(legsList);
 		} else if (selection == ExerciseList.SHOULDERS) {
-			for (Exercise exercise : this.shouldersList) {
-				if (i == this.shouldersList.size()) {
-					output += i + ": " + exercise.exerciseName;
-				} else {
-					output += i + ": " + exercise.exerciseName + "\n";
-					i++;
-				}
-			}
+			output = printExerciseListAux(shouldersList);
+		} else if (selection == ExerciseList.TRICEPS) {
+			output = printExerciseListAux(tricepsList);
 		}
 
 		return output;
 	}
 	
-	public int compareTo(Exercise first, Exercise second) {
-		return first.exerciseName.compareTo(second.exerciseName);
+	private String printExerciseListAux(ArrayList<Exercise> list) {
+		String output = "";
+		int i = 1;
+		
+		for (Exercise exercise : list) {
+			if (i == list.size()) {
+				output += i + ": " + exercise.exerciseName;
+			} else {
+				output += i + ": " + exercise.exerciseName + "\n";
+				i++;
+			}
+		}
+		
+		return output;
+	}
+	
+	//////// GETTERS FOR ARRAYLISTS //////// 
+	public ArrayList<Exercise> getAbsList() {
+		return this.absList;
 	}
 	
 	public ArrayList<Exercise> getBackList() {
 		return this.backList;
 	}
 	
-	public ArrayList<Exercise> getChestList() {
-		return this.chestList;
+	public ArrayList<Exercise> getBicepsList() {
+		return this.bicepsList;
 	}
 	
-	public ArrayList<Exercise> getShouldersList() {
-		return this.shouldersList;
+	public ArrayList<Exercise> getCardioList() {
+		return this.cardioList;
+	}
+	
+	public ArrayList<Exercise> getChestList() {
+		return this.chestList;
 	}
 	
 	public ArrayList<Exercise> getLegsList() {
 		return this.legsList;
 	}
 	
-	public ObservableList<Exercise> getBackExercises() {
-		ObservableList<Exercise> exercises = FXCollections.observableArrayList();
-
-		for (Exercise exercise : this.backList) {
-			exercises.add(exercise);
-		}
-
-		return exercises;
+	public ArrayList<Exercise> getShouldersList() {
+		return this.shouldersList;
+	}
+	
+	public ArrayList<Exercise> getTricepsList() {
+		return this.tricepsList;
+	}
+	
+	
+	//////// OBSERVABLE LISTS FOR JAVAFX GUI //////// 
+	public ObservableList<Exercise> getAbsExercises() {
+		return addObservableListAux(absList);
 	}
 
+	public ObservableList<Exercise> getBackExercises() {
+		return addObservableListAux(backList);
+	}
+
+	public ObservableList<Exercise> getBicepsExercises() {
+		return addObservableListAux(bicepsList);
+	}
+
+	public ObservableList<Exercise> getCardioExercises() {
+		return addObservableListAux(cardioList);
+	}
+	
 	public ObservableList<Exercise> getChestExercises() {
-		ObservableList<Exercise> exercises = FXCollections.observableArrayList();
-
-		for (Exercise exercise : this.chestList) {
-			exercises.add(exercise);
-		}
-
-		return exercises;
+		return addObservableListAux(chestList);
+	}
+	
+	public ObservableList<Exercise> getLegsExercises() {
+		return addObservableListAux(legsList);
 	}
 
 	public ObservableList<Exercise> getShouldersExercises() {
-		ObservableList<Exercise> exercises = FXCollections.observableArrayList();
-
-		for (Exercise exercise : this.shouldersList) {
-			exercises.add(exercise);
-		}
-
-		return exercises;
+		return addObservableListAux(shouldersList);
 	}
-
-	public ObservableList<Exercise> getLegsExercises() {
+	
+	public ObservableList<Exercise> getTricepsExercises() {
+		return addObservableListAux(tricepsList);
+	}
+	
+	private ObservableList<Exercise>  addObservableListAux(ArrayList<Exercise> list) {
 		ObservableList<Exercise> exercises = FXCollections.observableArrayList();
-
-		for (Exercise exercise : this.legsList) {
+		for (Exercise exercise : list) {
 			exercises.add(exercise);
 		}
-
+		
 		return exercises;
 	}
 
 	public ObservableList<Exercise> getTypeExercises() {
 		ObservableList<Exercise> exercises = FXCollections.observableArrayList();
 
+		exercises.add(new Exercise("", "Abs"));
 		exercises.add(new Exercise("", "Back"));
+		exercises.add(new Exercise("", "Biceps"));
+		exercises.add(new Exercise("", "Cardio"));
+		exercises.add(new Exercise("", "Chest"));
 		exercises.add(new Exercise("", "Legs"));
 		exercises.add(new Exercise("", "Shoulders"));
-		exercises.add(new Exercise("", "Chest"));
+		exercises.add(new Exercise("", "Triceps"));
+
 
 		return exercises;
 	}

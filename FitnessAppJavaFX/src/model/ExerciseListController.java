@@ -7,12 +7,11 @@ public class ExerciseListController {
 	public static void exerciseListOptions(ExerciseList list, Scanner scanner) {
 		int selection = 0;
 
-		while (selection != 7) {
+		while (selection != 4) {
 			System.out.println();
-			System.out.println("**** Exercise List Menu ****");
+			System.out.println("***** Exercise List Menu *****");
 			System.out.println("1. Create a new exercise\n2. Remove an exercise\n"
-					+ "3. View Back exercises\n4. View Chest exercises\n5. View Legs exercises\n"
-					+ "6. View Shoulders exercises\n7. Return to main menu");
+					+ "3. View Exercises\n4. Return to main menu");
 			System.out.print("Enter your selection: ");
 
 			selection = scanner.nextInt();
@@ -26,20 +25,68 @@ public class ExerciseListController {
 				deleteExerciseFromList(list, scanner);
 				break;
 			case 3: // View Back exercises
-				System.out.println(list.printExerciseList(ExerciseList.BACK));
+				viewExercisesMenu(list, scanner);
 				break;
-			case 4: // View Chest exercises
-				System.out.println(list.printExerciseList(ExerciseList.CHEST));
-				break;
-			case 5: // View Legs exercises
-				System.out.println(list.printExerciseList(ExerciseList.LEGS));
-				break;
-			case 6: // View Shoulders exercises
-				System.out.println(list.printExerciseList(ExerciseList.SHOULDERS));
-				break;
-			case 7:
+			case 4:
 				System.out.println("Returning to main menu.");
 				break;
+			default:
+				System.out.println("Please enter a valid number.");
+				break;
+			}
+		}
+	}
+	
+	public static void viewExercisesMenu(ExerciseList list, Scanner scanner) {
+		int selection = 0;
+		
+		while (selection != 9) {
+			System.out.println();
+			System.out.println("***** View Exercises Menu *****");
+			System.out.println("1. Abs Exercises\n2. Back Exercises\n3. Biceps Exercises"
+					+ "\n4. Cardio Exercises\n5. Chest Exercises\n6. Legs Exercises"
+					+ "\n7. Shoulders Exercises\n8. Triceps Exercises\n9. Return to Exercise List Menu");
+			System.out.print("Please enter your selection: ");
+			
+			selection = scanner.nextInt();
+			System.out.println();
+			
+			switch(selection) {			
+			case 1:
+				System.out.println("//// Abs Exercises ////");
+				System.out.println(list.printExerciseList(ExerciseList.ABS));
+				break;			
+			case 2:
+				System.out.println("//// Back Exercises ////");
+				System.out.println(list.printExerciseList(ExerciseList.BACK));
+				break;				
+			case 3:
+				System.out.println("//// Biceps Exercises ////");
+				System.out.println(list.printExerciseList(ExerciseList.BICEPS));
+				break;				
+			case 4:
+				System.out.println("//// Cardio Exercises ////");
+				System.out.println(list.printExerciseList(ExerciseList.CARDIO));
+				break;				
+			case 5:
+				System.out.println("//// Chest Exercises ////");
+				System.out.println(list.printExerciseList(ExerciseList.CHEST));
+				break;				
+			case 6:
+				System.out.println("//// Legs Exercises ////");
+				System.out.println(list.printExerciseList(ExerciseList.LEGS));
+				break;				
+			case 7:
+				System.out.println("//// Shoulders Exercises ////");
+				System.out.println(list.printExerciseList(ExerciseList.SHOULDERS));
+				break;			
+			case 8:
+				System.out.println("//// Triceps Exercises ////");
+				System.out.println(list.printExerciseList(ExerciseList.TRICEPS));
+				break;
+			case 9:
+				System.out.println("Now returning to Exercise List Menu");
+				break;			
 			default:
 				System.out.println("Please enter a valid number.");
 				break;
@@ -52,7 +99,7 @@ public class ExerciseListController {
 		scanner.nextLine();
 		
 		System.out.println();
-		System.out.println("***** Exercise Creation ****");
+		System.out.println("***** Exercise Creation *****");
 		System.out.print("Please enter the name of the new exercise: ");
 		name = scanner.nextLine();
 
@@ -60,9 +107,6 @@ public class ExerciseListController {
 		type = scanner.nextLine();
 
 		list.addExercise(new Exercise(name, type));
-
-		System.out.println(name + " has been successfully created!");
-
 	}
 	
 	public static void deleteExerciseFromList(ExerciseList list, Scanner scanner) {
@@ -104,8 +148,10 @@ public class ExerciseListController {
 				break;
 			case 5:
 				System.out.println("Returning to exercise list menu.");
+				break;
 			default:
 				System.out.println("Please enter a valid selection.");
+				break;
 
 			}
 

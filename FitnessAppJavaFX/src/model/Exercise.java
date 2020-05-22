@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  */
 
-public class Exercise {
+public class Exercise implements Comparable<Exercise> {
 
 	String exerciseName;
 	String exerciseType;
@@ -129,6 +129,11 @@ public class Exercise {
 
 	public String toString() {
 		return "Exercise name: " + this.exerciseName + " Exercise Type: " + this.exerciseType;
+	}
+
+	@Override
+	public int compareTo(Exercise exercise) {
+		return this.exerciseName.compareToIgnoreCase(exercise.exerciseName);
 	}
 
 }
