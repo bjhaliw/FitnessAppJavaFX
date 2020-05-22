@@ -1,5 +1,6 @@
 package model;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import javafx.scene.chart.CategoryAxis;
@@ -15,30 +16,38 @@ public class WorkoutTrackerController {
 		while (selection != 4) {
 			System.out.println();
 			System.out.println("**** Workout Tracker Menu ****");
-			System.out.println("1. View past workouts\n2. Edit a past workout\n" 
-								+ "3. View statistics\n4. Return to main menu");
+			System.out.println(
+					"1. View past workouts\n2. Edit a past workout\n" + "3. View statistics\n4. Return to main menu");
 			System.out.print("Enter your selection: ");
-			selection = scanner.nextInt();
 
-			switch (selection) {
-			case 1:
-				viewWorkouts(tracker, scanner);
-				break;
-			case 2:
-				editWorkout(tracker, list, scanner);
-				break;
-			case 3:
-				viewStatisticsOptions(tracker, list, scanner);
-				break;
-			case 4:
-				System.out.println("Returning to main menu");
-				break;
-			default:
-				System.out.println("Please enter valid selection");
-				break;
+			try {
+				selection = scanner.nextInt();
+
+				switch (selection) {
+				case 1:
+					viewWorkouts(tracker, scanner);
+					break;
+				case 2:
+					editWorkout(tracker, list, scanner);
+					break;
+				case 3:
+					viewStatisticsOptions(tracker, list, scanner);
+					break;
+				case 4:
+					System.out.println("Returning to main menu");
+					break;
+				default:
+					System.out.println("Please enter valid selection");
+					break;
+				}
+
+				System.out.println();
+
+			} catch (InputMismatchException e) {
+				System.out.println("Please enter a valid input (NUMBERS ONLY)");
+				scanner.nextLine();
+				selection = Integer.MAX_VALUE;
 			}
-			
-			System.out.println();
 		}
 	}
 
@@ -50,11 +59,11 @@ public class WorkoutTrackerController {
 	 * @return workout
 	 */
 	public static Workout viewWorkouts(WorkoutTracker tracker, Scanner scanner) {
-		Workout workout;
+		Workout workout = null;
 		int selection;
 		int i = 1;
 		int j = 1;
-		
+
 		System.out.println();
 		System.out.println("**** Past Workouts ****");
 		for (Workout current : tracker.workoutList) {
@@ -65,25 +74,32 @@ public class WorkoutTrackerController {
 
 		System.out.print("Please select the workout or 0 to return to previous menu: ");
 
-		selection = scanner.nextInt();
-		scanner.nextLine();
+		try {
+			selection = scanner.nextInt();
+			scanner.nextLine();
 
-		if (selection == 0) {
-			return null;
-		}
-		workout = tracker.workoutList.get(selection - 1);
-
-		System.out.println();
-		System.out.println("Workout Details from: " + workout.getStartTime().toString());
-		for (Exercise exercise : workout.exerciseArrayList) {
-			System.out.println(i + ": " + exercise);
-
-			for (Set set : exercise.setList) {
-				System.out.println("    " + j + ": " + set);
-				j++;
+			if (selection == 0) {
+				return null;
 			}
-			j = 1;
-			i++;
+			workout = tracker.workoutList.get(selection - 1);
+
+			System.out.println();
+			System.out.println("Workout Details from: " + workout.getStartTime().toString());
+			for (Exercise exercise : workout.exerciseArrayList) {
+				System.out.println(i + ": " + exercise);
+
+				for (Set set : exercise.setList) {
+					System.out.println("    " + j + ": " + set);
+					j++;
+				}
+				j = 1;
+				i++;
+			}
+
+		} catch (InputMismatchException e) {
+			System.out.println("Please enter a valid input (NUMBERS ONLY)");
+			scanner.nextLine();
+			selection = Integer.MAX_VALUE;
 		}
 
 		return workout;
@@ -102,33 +118,40 @@ public class WorkoutTrackerController {
 		int selection;
 
 		workout = viewWorkouts(tracker, scanner);
-		
+
 		if (workout == null) { // User backed out without selection a workout
-			return; 
+			return;
 		}
-		
+
 		System.out.println("0. Return to Workout Tracker Menu\n1. Add Exercise\n2. Remove Exercise\n"
 				+ "3. Add Set\n4. Remove Set\n5. Select another workout");
 		System.out.print("Please select from one of the previous options: ");
 
-		selection = scanner.nextInt();
+		try {
+			selection = scanner.nextInt();
 
-		scanner.nextLine();
-		
-		if (selection == 0) {
-			return; // Back to tracker menu
-		}
+			scanner.nextLine();
 
-		if (selection == 1) {
-			WorkoutController.addExercise(workout, list, scanner);
-		} else if (selection == 2) {
-			WorkoutController.removeExercise(workout, scanner);
-		} else if (selection == 3) {
-			WorkoutController.addSet(workout, scanner);
-		} else if (selection == 4) {
-			WorkoutController.removeSet(workout, scanner);
-		} else if (selection == 5) { // Restart the method (picked the wrong option?)
-			WorkoutTrackerController.editWorkout(tracker, list, scanner);
+			if (selection == 0) {
+				return; // Back to tracker menu
+			}
+
+			if (selection == 1) {
+				WorkoutController.addExercise(workout, list, scanner);
+			} else if (selection == 2) {
+				WorkoutController.removeExercise(workout, scanner);
+			} else if (selection == 3) {
+				WorkoutController.addSet(workout, scanner);
+			} else if (selection == 4) {
+				WorkoutController.removeSet(workout, scanner);
+			} else if (selection == 5) { // Restart the method (picked the wrong option?)
+				WorkoutTrackerController.editWorkout(tracker, list, scanner);
+			}
+
+		} catch (InputMismatchException e) {
+			System.out.println("Please enter a valid input (NUMBERS ONLY)");
+			scanner.nextLine();
+			selection = Integer.MAX_VALUE;
 		}
 	}
 
@@ -141,21 +164,28 @@ public class WorkoutTrackerController {
 			System.out.println("1. View Max Weight\n2. View Max Reps\n3. Return to tracker menu");
 			System.out.print("Enter your selection: ");
 
-			selection = scanner.nextInt();
-			
-			switch (selection) {
-			case 1:
-				viewStatisticsAux(tracker, list, scanner, selection);
-				break;
-			case 2:
-				viewStatisticsAux(tracker, list, scanner, selection);
-				break;
-			case 3:
-				System.out.println("Returning to tracker menu");
-				break;
-			default:
-				System.out.println("Please enter valid selection");
-				break;
+			try {
+				selection = scanner.nextInt();
+
+				switch (selection) {
+				case 1:
+					viewStatisticsAux(tracker, list, scanner, selection);
+					break;
+				case 2:
+					viewStatisticsAux(tracker, list, scanner, selection);
+					break;
+				case 3:
+					System.out.println("Returning to tracker menu");
+					break;
+				default:
+					System.out.println("Please enter valid selection");
+					break;
+				}
+
+			} catch (InputMismatchException e) {
+				System.out.println("Please enter a valid input (NUMBERS ONLY)");
+				scanner.nextLine();
+				selection = Integer.MAX_VALUE;
 			}
 		}
 	}
@@ -171,69 +201,77 @@ public class WorkoutTrackerController {
 					+ "3. Legs exercises\n4. Shoulders exercises\n5. Back to statistics menu");
 
 			System.out.print("Please make your selection: ");
-			selection = scanner.nextInt();
 
-			switch (selection) {
-			case 1:
-				System.out.println(list.printExerciseList(ExerciseList.BACK));
-				System.out.print("Select exercise to get max weight: ");
+			try {
+				selection = scanner.nextInt();
 
-				exerciseSelection = scanner.nextInt();
-				name = list.getBackExercises().get(exerciseSelection - 1).getExerciseName();
-				
-				if(numSelection == 1) {
-					viewMaxWeightAux(scanner, tracker, name);
-				} else if (numSelection == 2) {
-					viewMaxRepsAux(scanner, tracker, name);
+				switch (selection) {
+				case 1:
+					System.out.println(list.printExerciseList(ExerciseList.BACK));
+					System.out.print("Select exercise to get max weight: ");
+
+					exerciseSelection = scanner.nextInt();
+					name = list.getBackExercises().get(exerciseSelection - 1).getExerciseName();
+
+					if (numSelection == 1) {
+						viewMaxWeightAux(scanner, tracker, name);
+					} else if (numSelection == 2) {
+						viewMaxRepsAux(scanner, tracker, name);
+					}
+
+					break;
+				case 2:
+					System.out.println(list.printExerciseList(ExerciseList.CHEST));
+					System.out.print("Select exercise to get max weight: ");
+
+					exerciseSelection = scanner.nextInt();
+					name = list.getChestExercises().get(exerciseSelection - 1).getExerciseName();
+
+					if (numSelection == 1) {
+						viewMaxWeightAux(scanner, tracker, name);
+					} else if (numSelection == 2) {
+						viewMaxRepsAux(scanner, tracker, name);
+					}
+
+					break;
+				case 3:
+					System.out.println(list.printExerciseList(ExerciseList.LEGS));
+					System.out.print("Select exercise to get max weight: ");
+
+					exerciseSelection = scanner.nextInt();
+					name = list.getLegsExercises().get(exerciseSelection - 1).getExerciseName();
+
+					if (numSelection == 1) {
+						viewMaxWeightAux(scanner, tracker, name);
+					} else if (numSelection == 2) {
+						viewMaxRepsAux(scanner, tracker, name);
+					}
+
+					break;
+				case 4:
+					System.out.println(list.printExerciseList(ExerciseList.SHOULDERS));
+					System.out.print("Select exercise to get max weight: ");
+					exerciseSelection = scanner.nextInt();
+					name = list.getChestExercises().get(exerciseSelection - 1).getExerciseName();
+
+					if (numSelection == 1) {
+						viewMaxWeightAux(scanner, tracker, name);
+					} else if (numSelection == 2) {
+						viewMaxRepsAux(scanner, tracker, name);
+					}
+
+					break;
+				case 5:
+					System.out.println("Returning to statistics menu.");
+				default:
+					System.out.println("Please enter a valid selection.");
+
 				}
 
-				break;
-			case 2:
-				System.out.println(list.printExerciseList(ExerciseList.CHEST));
-				System.out.print("Select exercise to get max weight: ");
-
-				exerciseSelection = scanner.nextInt();
-				name = list.getChestExercises().get(exerciseSelection - 1).getExerciseName();
-				
-				if(numSelection == 1) {
-					viewMaxWeightAux(scanner, tracker, name);
-				} else if (numSelection == 2) {
-					viewMaxRepsAux(scanner, tracker, name);
-				}
-
-				break;
-			case 3:
-				System.out.println(list.printExerciseList(ExerciseList.LEGS));
-				System.out.print("Select exercise to get max weight: ");
-
-				exerciseSelection = scanner.nextInt();
-				name = list.getLegsExercises().get(exerciseSelection - 1).getExerciseName();
-				
-				if(numSelection == 1) {
-					viewMaxWeightAux(scanner, tracker, name);
-				} else if (numSelection == 2) {
-					viewMaxRepsAux(scanner, tracker, name);
-				}
-
-				break;
-			case 4:
-				System.out.println(list.printExerciseList(ExerciseList.SHOULDERS));
-				System.out.print("Select exercise to get max weight: ");
-				exerciseSelection = scanner.nextInt();
-				name = list.getChestExercises().get(exerciseSelection - 1).getExerciseName();
-				
-				if(numSelection == 1) {
-					viewMaxWeightAux(scanner, tracker, name);
-				} else if (numSelection == 2) {
-					viewMaxRepsAux(scanner, tracker, name);
-				}
-				
-				break;
-			case 5:
-				System.out.println("Returning to statistics menu.");
-			default:
-				System.out.println("Please enter a valid selection.");
-
+			} catch (InputMismatchException e) {
+				System.out.println("Please enter a valid input (NUMBERS ONLY)");
+				scanner.nextLine();
+				selection = Integer.MAX_VALUE;
 			}
 		}
 
@@ -270,15 +308,16 @@ public class WorkoutTrackerController {
 			System.out.println("Would you like to see a graph of max weight for each workout for this exercise?");
 			System.out.print("Type 1 to see a graph or 2 to return to menu: ");
 		}
-		
+
 		System.out.println();
 	}
 
-	public static void viewMaxRepsAux(Scanner scanner, WorkoutTracker tracker, String name) {		
+	public static void viewMaxRepsAux(Scanner scanner, WorkoutTracker tracker, String name) {
 		double maxReps = Integer.MIN_VALUE; // Minimum reps so user reps are always higher
 
 		for (Workout workout : tracker.getWorkoutList()) { // Looking through the workouts
-			for (Exercise current : workout.getExerciseArrayList()) { // Looking through the exercises inside of the workout
+			for (Exercise current : workout.getExerciseArrayList()) { // Looking through the exercises inside of the
+																		// workout
 				if (current.getExerciseName().equals(name)) { // Looking to see if the workout has that exercise
 					for (Set set : current.getSetList()) { // Looking through the sets for the particular exercise
 						if (set.getReps() > maxReps) { // Checking if the current is higher than the max
@@ -297,11 +336,11 @@ public class WorkoutTrackerController {
 			System.out.print("Type 1 to see a graph or 2 to return to menu: ");
 		}
 	}
-	
-	
-	
+
 	/**
-	 * This method will allow the user to see a graph of their progress through JavaFX
+	 * This method will allow the user to see a graph of their progress through
+	 * JavaFX
+	 * 
 	 * @param name
 	 * @return
 	 */

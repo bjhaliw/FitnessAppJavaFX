@@ -1,5 +1,6 @@
 package model;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import javax.swing.JFileChooser;
@@ -41,28 +42,35 @@ public class Driver {
 					+ "3. Workout Tracker Options\n4. Exit Application");
 			System.out.print("Please make your selection: ");
 
-			selection = scanner.nextInt();
+			try {
+				selection = scanner.nextInt();
+				
+				switch (selection) {
 
-			switch (selection) {
+				case 1:
+					WorkoutController.currentWorkoutOptions(workout, list, scanner, tracker);
+					break;
+				case 2:
+					ExerciseListController.exerciseListOptions(list, scanner);
+					break;
+				case 3:
+					WorkoutTrackerController.workoutTrackerOptions(tracker, list, scanner);
+					break;
+				case 4:
+					System.out.println("Thank you for using the fitness application!");
+					break;
+				default:
+					System.out.println("Please enter a valid number.");
+					break;
+				}
 
-			case 1:
-				WorkoutController.currentWorkoutOptions(workout, list, scanner, tracker);
-				break;
-			case 2:
-				ExerciseListController.exerciseListOptions(list, scanner);
-				break;
-			case 3:
-				WorkoutTrackerController.workoutTrackerOptions(tracker, list, scanner);
-				break;
-			case 4:
-				System.out.println("Thank you for using the fitness application!");
-				break;
-			default:
-				System.out.println("Please enter a valid number.");
-				break;
-			}
-
-			System.out.println();
+				System.out.println();
+			} catch (InputMismatchException e) {
+				System.out.println("Please enter a valid input (NUMBERS ONLY)");
+				System.out.println();
+				scanner.nextLine();
+				selection = Integer.MAX_VALUE;
+			}		
 		}
 
 		tracker.saveWorkoutList("C:\\Users\\bjhal\\Desktop\\WorkoutList.txt");

@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class WorkoutController {
@@ -17,38 +18,45 @@ public class WorkoutController {
 					+ "6. Delete current workout\n7. View current workout\n8. Return to main menu");
 			System.out.print("Please enter your selection: ");
 
-			selection = scanner.nextInt();
+			try {
+				selection = scanner.nextInt();
 
-			switch (selection) {
-			case 1:
-				tracker.addWorkout(workout);
-				break;
-			case 2:
-				addExercise(workout, list, scanner);
-				break;
-			case 3:
-				addSet(workout, scanner);
-				break;
-			case 4:
-				removeExercise(workout, scanner);
-				break;
-			case 5:
-				removeSet(workout, scanner);
-				break;
-			case 6:
-				tracker.removeWorkout(workout);
-			case 7:
-				workout.printExerciseArrayList();
-				break;
-			case 8:
-				System.out.println("Now returning to main menu.");
-				break;
-			default:
-				System.out.println("Please enter a valid selection.");
-				break;
+				switch (selection) {
+				case 1:
+					tracker.addWorkout(workout);
+					break;
+				case 2:
+					addExercise(workout, list, scanner);
+					break;
+				case 3:
+					addSet(workout, scanner);
+					break;
+				case 4:
+					removeExercise(workout, scanner);
+					break;
+				case 5:
+					removeSet(workout, scanner);
+					break;
+				case 6:
+					tracker.removeWorkout(workout);
+				case 7:
+					workout.printExerciseArrayList();
+					break;
+				case 8:
+					System.out.println("Now returning to main menu.");
+					break;
+				default:
+					System.out.println("Please enter a valid selection.");
+					break;
+				}
+
+				System.out.println();
+
+			} catch (InputMismatchException e) {
+				System.out.println("Please enter a valid input (NUMBERS ONLY)");
+				scanner.nextLine();
+				selection = Integer.MAX_VALUE;
 			}
-
-			System.out.println();
 		}
 	}
 
@@ -68,38 +76,45 @@ public class WorkoutController {
 		System.out.println("1. Back\n2. Chest\n3. Legs\n4. Shoulders");
 		System.out.print("Please select the type of exercise you wish to do or press 0 to return: ");
 
-		selection = scanner.nextInt();
-		scanner.nextLine();
+		try {
+			selection = scanner.nextInt();
+			scanner.nextLine();
 
-		if (selection == 0) {
-			return; 
+			if (selection == 0) {
+				return;
+			}
+
+			add = list.printExerciseList(selection);
+
+			if (selection == ExerciseList.BACK) {
+				exerciseList = list.backList;
+
+			} else if (selection == ExerciseList.CHEST) {
+				exerciseList = list.chestList;
+
+			} else if (selection == ExerciseList.LEGS) {
+				exerciseList = list.legsList;
+
+			} else if (selection == ExerciseList.SHOULDERS) {
+				exerciseList = list.shouldersList;
+
+			}
+
+			System.out.println(add);
+			System.out.println("Please select an exercise: ");
+
+			selection = scanner.nextInt();
+			scanner.nextLine();
+
+			workout.addExercise(exerciseList.get(selection - 1));
+
+			System.out.println("Exercise has been successfully added");
+
+		} catch (InputMismatchException e) {
+			System.out.println("Please enter a valid input (NUMBERS ONLY)");
+			scanner.nextLine();
+			selection = Integer.MAX_VALUE;
 		}
-		
-		add = list.printExerciseList(selection);
-
-		if (selection == ExerciseList.BACK) {
-			exerciseList = list.backList;
-
-		} else if (selection == ExerciseList.CHEST) {
-			exerciseList = list.chestList;
-
-		} else if (selection == ExerciseList.LEGS) {
-			exerciseList = list.legsList;
-
-		} else if (selection == ExerciseList.SHOULDERS) {
-			exerciseList = list.shouldersList;
-
-		}
-
-		System.out.println(add);
-		System.out.println("Please select an exercise: ");
-
-		selection = scanner.nextInt();
-		scanner.nextLine();
-
-		workout.addExercise(exerciseList.get(selection - 1));
-
-		System.out.println("Exercise has been successfully added");
 
 	}
 
@@ -120,24 +135,31 @@ public class WorkoutController {
 		System.out.println(workout.printExerciseArrayList());
 		System.out.print("Select the exercise you wish to add a set to:");
 
-		selection = scanner.nextInt();
+		try {
+			selection = scanner.nextInt();
 
-		exercise = workout.exerciseArrayList.get(selection - 1);
+			exercise = workout.exerciseArrayList.get(selection - 1);
 
-		System.out.print("Enter the reps done: ");
-		reps = scanner.nextInt();
-		scanner.nextLine();
+			System.out.print("Enter the reps done: ");
+			reps = scanner.nextInt();
+			scanner.nextLine();
 
-		System.out.print("Enter the weight used: ");
-		weight = scanner.nextDouble();
-		scanner.nextLine();
+			System.out.print("Enter the weight used: ");
+			weight = scanner.nextDouble();
+			scanner.nextLine();
 
-		System.out.println(reps);
-		System.out.println(weight);
+			System.out.println(reps);
+			System.out.println(weight);
 
-		exercise.addSet(new Set(reps, weight));
+			exercise.addSet(new Set(reps, weight));
 
-		System.out.println("Set has been successfully added!");
+			System.out.println("Set has been successfully added!");
+
+		} catch (InputMismatchException e) {
+			System.out.println("Please enter a valid input (NUMBERS ONLY)");
+			scanner.nextLine();
+			selection = Integer.MAX_VALUE;
+		}
 
 	}
 
@@ -155,11 +177,18 @@ public class WorkoutController {
 		System.out.println(workout.printExerciseArrayList());
 		System.out.println("Please select the exercise that you wish to remove: ");
 
-		selection = scanner.nextInt();
+		try {
+			selection = scanner.nextInt();
 
-		scanner.nextLine();
+			scanner.nextLine();
 
-		workout.removeExercise(workout.exerciseArrayList.remove(selection - 1));
+			workout.removeExercise(workout.exerciseArrayList.remove(selection - 1));
+
+		} catch (InputMismatchException e) {
+			System.out.println("Please enter a valid input (NUMBERS ONLY)");
+			scanner.nextLine();
+			selection = Integer.MAX_VALUE;
+		}
 
 	}
 
@@ -178,17 +207,24 @@ public class WorkoutController {
 		System.out.println(workout.printExerciseArrayList());
 		System.out.print("Please select the exercise to remove the set from: ");
 
-		selection = scanner.nextInt();
+		try {
+			selection = scanner.nextInt();
 
-		exercise = workout.exerciseArrayList.get(selection - 1);
+			exercise = workout.exerciseArrayList.get(selection - 1);
 
-		System.out.println(exercise.printSetList());
-		System.out.print("Please select the set that you wish to remove: ");
+			System.out.println(exercise.printSetList());
+			System.out.print("Please select the set that you wish to remove: ");
 
-		selection = scanner.nextInt();
+			selection = scanner.nextInt();
 
-		scanner.nextLine();
+			scanner.nextLine();
 
-		exercise.removeSet(exercise.setList.get(selection - 1));
+			exercise.removeSet(exercise.setList.get(selection - 1));
+
+		} catch (InputMismatchException e) {
+			System.out.println("Please enter a valid input (NUMBERS ONLY)");
+			scanner.nextLine();
+			selection = Integer.MAX_VALUE;
+		}
 	}
 }
