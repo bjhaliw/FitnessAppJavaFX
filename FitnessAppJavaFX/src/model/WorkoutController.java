@@ -69,51 +69,74 @@ public class WorkoutController {
 	 */
 	public static void addExercise(Workout workout, ExerciseList list, Scanner scanner) {
 		String add = "";
-		int selection;
+		final int returnToPreviousMenu = 9;
+		int selection = Integer.MAX_VALUE;
 		ArrayList<Exercise> exerciseList = new ArrayList<>();
-		System.out.println();
-		System.out.println("**** Add Exercise to Workout ****");
-		System.out.println("1. Back\n2. Chest\n3. Legs\n4. Shoulders");
-		System.out.print("Please select the type of exercise you wish to do or press 0 to return: ");
 
-		try {
-			selection = scanner.nextInt();
-			scanner.nextLine();
+		while (selection != returnToPreviousMenu) {
 
-			if (selection == 0) {
-				return;
+			System.out.println();
+			System.out.println("**** Add Exercise to Workout ****");
+			System.out.println(
+					"1. Abs\n2. Back\n3. Biceps\n4. Cardio\n5. Chest\n6. Legs\n7. Shoulders\n8. Triceps\n9. Back to Workout Menu");
+			System.out.print("Please enter your selection: ");
+
+			try {
+				selection = scanner.nextInt();
+				scanner.nextLine();
+
+				if (selection == returnToPreviousMenu) {
+					System.out.println("Now returning to Workout Menu");
+					return;
+				}
+
+				add = list.printExerciseList(selection);
+
+				switch (selection) {
+				case ExerciseList.ABS:
+					exerciseList = list.getAbsList();
+					break;
+				case ExerciseList.BACK:
+					exerciseList = list.getBackList();
+					break;
+				case ExerciseList.BICEPS:
+					exerciseList = list.getBicepsList();
+					break;
+				case ExerciseList.CARDIO:
+					exerciseList = list.getCardioList();
+					break;
+				case ExerciseList.CHEST:
+					exerciseList = list.getChestList();
+					break;
+				case ExerciseList.LEGS:
+					exerciseList = list.getAbsList();
+					break;
+				case ExerciseList.SHOULDERS:
+					exerciseList = list.getShouldersList();
+					break;
+				case ExerciseList.TRICEPS:
+					exerciseList = list.getAbsList();
+					break;
+				default:
+					System.out.println("Please select a valid number");
+
+				} 
+
+				System.out.println(add);
+				System.out.println("Please select an exercise: ");
+
+				selection = scanner.nextInt();
+				scanner.nextLine();
+
+				workout.addExercise(exerciseList.get(selection - 1));
+
+				System.out.println("Exercise has been successfully added");
+
+			} catch (InputMismatchException e) {
+				System.out.println("Please enter a valid input (NUMBERS ONLY)");
+				scanner.nextLine();
+				selection = Integer.MAX_VALUE;
 			}
-
-			add = list.printExerciseList(selection);
-
-			if (selection == ExerciseList.BACK) {
-				exerciseList = list.backList;
-
-			} else if (selection == ExerciseList.CHEST) {
-				exerciseList = list.chestList;
-
-			} else if (selection == ExerciseList.LEGS) {
-				exerciseList = list.legsList;
-
-			} else if (selection == ExerciseList.SHOULDERS) {
-				exerciseList = list.shouldersList;
-
-			}
-
-			System.out.println(add);
-			System.out.println("Please select an exercise: ");
-
-			selection = scanner.nextInt();
-			scanner.nextLine();
-
-			workout.addExercise(exerciseList.get(selection - 1));
-
-			System.out.println("Exercise has been successfully added");
-
-		} catch (InputMismatchException e) {
-			System.out.println("Please enter a valid input (NUMBERS ONLY)");
-			scanner.nextLine();
-			selection = Integer.MAX_VALUE;
 		}
 
 	}

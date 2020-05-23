@@ -3,13 +3,11 @@ package model;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
 public class Driver {
 
 	public static void main(String[] args) throws Exception {
 
+		
 		ExerciseList list = new ExerciseList();
 		WorkoutTracker tracker = new WorkoutTracker();
 		Workout workout = new Workout();
@@ -86,4 +84,5 @@ public class Driver {
 
 		scanner.close();
 	}
+
 }

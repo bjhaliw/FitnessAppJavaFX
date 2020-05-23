@@ -1,12 +1,18 @@
 package model;
 
+import java.awt.Dimension;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+
 
 public class WorkoutTrackerController {
 
@@ -288,6 +294,7 @@ public class WorkoutTrackerController {
 	 */
 	public static void viewMaxWeightAux(Scanner scanner, WorkoutTracker tracker, String name) {
 		double maxWeight = Integer.MIN_VALUE; // Minimum weight so user weight is always higher
+		int selection = Integer.MAX_VALUE;
 
 		for (Workout workout : tracker.getWorkoutList()) { // Looking through the workouts
 			for (Exercise current : workout.getExerciseArrayList()) { // Looking through the exercises for the workouts
@@ -308,12 +315,28 @@ public class WorkoutTrackerController {
 			System.out.println("Would you like to see a graph of max weight for each workout for this exercise?");
 			System.out.print("Type 1 to see a graph or 2 to return to menu: ");
 		}
+		
+		try {
+			selection = scanner.nextInt();
+
+			if (selection == 1) {
+				showStatisticsGraph(tracker, name, -1);				
+			} else if (selection == 2) {
+				return;
+			}
+
+		} catch (InputMismatchException e) {
+			System.out.println("Please enter a valid input (NUMBERS ONLY)");
+			scanner.nextLine();
+			selection = Integer.MAX_VALUE;
+		}
 
 		System.out.println();
 	}
 
 	public static void viewMaxRepsAux(Scanner scanner, WorkoutTracker tracker, String name) {
 		double maxReps = Integer.MIN_VALUE; // Minimum reps so user reps are always higher
+		int selection = 0;
 
 		for (Workout workout : tracker.getWorkoutList()) { // Looking through the workouts
 			for (Exercise current : workout.getExerciseArrayList()) { // Looking through the exercises inside of the
@@ -334,7 +357,54 @@ public class WorkoutTrackerController {
 			System.out.println("The maximum reps for " + name + " is: " + maxReps);
 			System.out.println("Would you like to see a graph of max reps for each workout for this exercise?");
 			System.out.print("Type 1 to see a graph or 2 to return to menu: ");
+
+			try {
+				selection = scanner.nextInt();
+
+				if (selection == 1) {
+					showStatisticsGraph(tracker, name, -1);				
+				} else if (selection == 2) {
+					return;
+				}
+
+			} catch (InputMismatchException e) {
+				System.out.println("Please enter a valid input (NUMBERS ONLY)");
+				scanner.nextLine();
+				selection = Integer.MAX_VALUE;
+			}
 		}
+	}
+	
+	/**
+	 * This method allows the user to view a graph of their current progress with a specified
+	 * exercise.
+	 * @param tracker
+	 * @param name - will be the name of the selected exercise
+	 * @param selection - will be the type of statistic that they want to see (max reps or max weight)
+	 */
+	public static void showStatisticsGraph(WorkoutTracker tracker, String name, int selection) {
+		JFrame frame = new JFrame();
+		final JFXPanel jfxPanel = new JFXPanel();
+		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+		
+		JPanel jp = new JPanel();
+		jp.add(jfxPanel);
+		jp.setVisible(true);
+		jp.setPreferredSize(new Dimension(800, 800));
+
+		Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+				Scene scene = new Scene(createGraph(tracker, name), 800, 800);
+				jfxPanel.setScene(scene);
+				jfxPanel.setVisible(true);
+            }
+        });
+
+		frame.add(jp);
+		frame.pack();
 	}
 
 	/**
@@ -344,7 +414,7 @@ public class WorkoutTrackerController {
 	 * @param name
 	 * @return
 	 */
-	public static LineChart<String, Number> createGraph(WorkoutTracker tracker, String name, int choice) {
+	public static LineChart<String, Number> createGraph(WorkoutTracker tracker, String name) {
 		double maxWeight = 0;
 		double totalMax = 0;
 		double minWeight = 1000;
