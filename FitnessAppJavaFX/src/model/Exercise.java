@@ -17,7 +17,8 @@ public class Exercise implements Comparable<Exercise> {
 	String exerciseName;
 	String exerciseType;
 	ArrayList<Set> setList;
-	double maxWeight;
+	double maxWeight, oneRepMax, totalVolume;
+	double maxReps;
 
 	/**
 	 * Constructor that creates an Exercise object to be used.
@@ -29,24 +30,30 @@ public class Exercise implements Comparable<Exercise> {
 		this.exerciseName = exerciseName;
 		this.exerciseType = exerciseType;
 		this.setList = new ArrayList<>();
+		maxWeight = 0;
+		oneRepMax = 0;
+		totalVolume = 0;
+		maxReps = 0;
 	}
 
 	/**
-	 * Adds a Set object for the exercise
+	 * Adds the indicated set and updates the max values
 	 * 
 	 * @param set
 	 */
 	public void addSet(Set set) {
 		this.setList.add(set);
+		setMaxValues();
 	}
 
 	/**
-	 * Removes the indicated set.
+	 * Removes the indicated set and updates the max values
 	 * 
 	 * @param set
 	 */
 	public void removeSet(Set set) {
 		this.setList.remove(set);
+		setMaxValues();
 	}
 
 	/**
@@ -95,6 +102,70 @@ public class Exercise implements Comparable<Exercise> {
 	}
 
 	/**
+	 * Returns the max weight for the exercise
+	 * 
+	 * @return maxWeight
+	 */
+	public double getMaxWeight() {
+		return maxWeight;
+	}
+
+	/**
+	 * Sets the max weight for the exercise
+	 */
+	public void setMaxWeight(double maxWeight) {
+		this.maxWeight = maxWeight;
+	}
+
+	/**
+	 * Returns the one rep max weight for the exercise
+	 * 
+	 * @return oneRepMax
+	 */
+	public double getOneRepMax() {
+		return oneRepMax;
+	}
+
+	/**
+	 * Sets the one rep max weight for the exercise
+	 */
+	public void setOneRepMax(double oneRepMax) {
+		this.oneRepMax = oneRepMax;
+	}
+
+	/**
+	 * Returns the total volume max for the exercise
+	 * 
+	 * @return totalVolume
+	 */
+	public double getTotalVolume() {
+		return totalVolume;
+	}
+
+	/**
+	 * Sets the total volume max for the exercise
+	 */
+	public void setTotalVolume(double totalVolume) {
+		this.totalVolume = totalVolume;
+	}
+
+	/**
+	 * Returns the max reps for the exercise
+	 * 
+	 * @return maxReps
+	 */
+	public double getMaxReps() {
+		return maxReps;
+	}
+
+	/**
+	 * Sets the max reps for the exercise
+	 */
+	public void setMaxReps(int maxReps) {
+		this.maxReps = maxReps;
+	}
+
+	/**
 	 * Prints out the current Set ArrayList
 	 * 
 	 * @return output
@@ -110,21 +181,53 @@ public class Exercise implements Comparable<Exercise> {
 
 		return output;
 	}
-	
-	/** 
-	 * Returns the max amount of weight done in the sets for the exercise
-	 * @return amount
+
+	/**
+	 * Sets the current max weight, reps, volume, and estimates the user's one rep
+	 * max for the current exercise
 	 */
-	public double getMaxWeight() {
+	public void setMaxValues() {
+		///// Setting Max Weight /////
 		double amount = 0;
-		
-		for(Set set : this.setList) {
+		double max = 0;
+		for (Set set : this.setList) {
 			if (set.getWeight() > amount) {
 				amount = set.getWeight();
 			}
 		}
-		
-		return amount;
+		this.maxWeight = amount;
+
+		///// Setting One Rep Max /////
+		amount = 0;
+		max = 0;
+		for (Set set : this.setList) {
+			amount = set.getWeight() * (1 + (set.getReps() / 30));
+			if (amount > max) {
+				max = amount;
+			}
+		}
+		this.oneRepMax = max;
+
+		///// Setting Max Reps /////
+		amount = 0;
+		for (Set set : this.setList) {
+			if (set.getReps() > amount) {
+				amount = set.getReps();
+			}
+		}
+		this.maxReps = amount;
+
+		///// Setting Max Volume /////
+		amount = 0;
+		max = 0;
+		for (Set set : this.setList) {
+			amount = set.getWeight() * set.getReps();
+
+			if (amount > max) {
+				max = amount;
+			}
+		}
+		this.totalVolume = max;
 	}
 
 	public String toString() {

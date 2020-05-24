@@ -16,6 +16,11 @@ import javafx.scene.chart.XYChart;
 
 public class WorkoutTrackerController {
 
+	public static final int MAX_WEIGHT_STATS = 1;
+	public static final int MAX_REPS_STATS = 2;
+	public static final int ONE_REP_MAX = 3;
+	public static final int TOTAL_VOLUME = 4;
+	
 	public static void workoutTrackerOptions(WorkoutTracker tracker, ExerciseList list, Scanner scanner) {
 		int selection = 0;
 
@@ -196,7 +201,7 @@ public class WorkoutTrackerController {
 		}
 	}
 
-	public static void viewStatisticsAux(WorkoutTracker tracker, ExerciseList list, Scanner scanner, int numSelection) {
+	private static void viewStatisticsAux(WorkoutTracker tracker, ExerciseList list, Scanner scanner, int numSelection) {
 		int selection = 0, exerciseSelection = 0;
 		String name;
 
@@ -292,17 +297,15 @@ public class WorkoutTrackerController {
 	 * @param name
 	 * @return
 	 */
-	public static void viewMaxWeightAux(Scanner scanner, WorkoutTracker tracker, String name) {
+	private static void viewMaxWeightAux(Scanner scanner, WorkoutTracker tracker, String name) {
 		double maxWeight = Integer.MIN_VALUE; // Minimum weight so user weight is always higher
 		int selection = Integer.MAX_VALUE;
 
 		for (Workout workout : tracker.getWorkoutList()) { // Looking through the workouts
 			for (Exercise current : workout.getExerciseArrayList()) { // Looking through the exercises for the workouts
 				if (current.getExerciseName().equals(name)) { // Looking to see if the workout has that exercise
-					for (Set set : current.getSetList()) { // Looking through the sets for the particular exercise
-						if (set.getWeight() > maxWeight) { // Checking if the current is higher than the max
-							maxWeight = set.getWeight(); // Updating the new maximum weight
-						}
+					if (current.getMaxWeight() > maxWeight) {
+						maxWeight = current.getMaxWeight();
 					}
 				}
 			}
@@ -310,6 +313,7 @@ public class WorkoutTrackerController {
 
 		if (maxWeight == Integer.MIN_VALUE) {
 			System.out.println(name + " was not found");
+			return;
 		} else {
 			System.out.println("The maximum weight for " + name + " is: " + maxWeight);
 			System.out.println("Would you like to see a graph of max weight for each workout for this exercise?");
@@ -320,7 +324,7 @@ public class WorkoutTrackerController {
 			selection = scanner.nextInt();
 
 			if (selection == 1) {
-				showStatisticsGraph(tracker, name, -1);				
+				showStatisticsGraph(tracker, name, WorkoutTrackerController.MAX_WEIGHT_STATS);				
 			} else if (selection == 2) {
 				return;
 			}
@@ -334,18 +338,15 @@ public class WorkoutTrackerController {
 		System.out.println();
 	}
 
-	public static void viewMaxRepsAux(Scanner scanner, WorkoutTracker tracker, String name) {
+	private static void viewMaxRepsAux(Scanner scanner, WorkoutTracker tracker, String name) {
 		double maxReps = Integer.MIN_VALUE; // Minimum reps so user reps are always higher
 		int selection = 0;
 
 		for (Workout workout : tracker.getWorkoutList()) { // Looking through the workouts
-			for (Exercise current : workout.getExerciseArrayList()) { // Looking through the exercises inside of the
-																		// workout
+			for (Exercise current : workout.getExerciseArrayList()) { // Looking through the exercises inside of the workout
 				if (current.getExerciseName().equals(name)) { // Looking to see if the workout has that exercise
-					for (Set set : current.getSetList()) { // Looking through the sets for the particular exercise
-						if (set.getReps() > maxReps) { // Checking if the current is higher than the max
-							maxReps = set.getReps(); // Updating the new maximum reps
-						}
+					if (current.getMaxWeight() > maxReps) {
+						maxReps = current.getMaxReps();
 					}
 				}
 			}
@@ -353,6 +354,7 @@ public class WorkoutTrackerController {
 
 		if (maxReps == Integer.MIN_VALUE) {
 			System.out.println(name + " was not found");
+			return;
 		} else {
 			System.out.println("The maximum reps for " + name + " is: " + maxReps);
 			System.out.println("Would you like to see a graph of max reps for each workout for this exercise?");
@@ -362,7 +364,7 @@ public class WorkoutTrackerController {
 				selection = scanner.nextInt();
 
 				if (selection == 1) {
-					showStatisticsGraph(tracker, name, -1);				
+					showStatisticsGraph(tracker, name, WorkoutTrackerController.MAX_REPS_STATS);				
 				} else if (selection == 2) {
 					return;
 				}
@@ -385,26 +387,24 @@ public class WorkoutTrackerController {
 	public static void showStatisticsGraph(WorkoutTracker tracker, String name, int selection) {
 		JFrame frame = new JFrame();
 		final JFXPanel jfxPanel = new JFXPanel();
+		
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		frame.setAlwaysOnTop(true);
+		frame.setTitle("Graph");
 		
 		JPanel jp = new JPanel();
 		jp.add(jfxPanel);
 		jp.setVisible(true);
 		jp.setPreferredSize(new Dimension(800, 800));
-
-		Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-				Scene scene = new Scene(createGraph(tracker, name), 800, 800);
-				jfxPanel.setScene(scene);
-				jfxPanel.setVisible(true);
-            }
-        });
+		
+		Scene scene = new Scene(createGraph(tracker, name, selection), 800, 800);
+		jfxPanel.setScene(scene);
+		jfxPanel.setVisible(true);
 
 		frame.add(jp);
 		frame.pack();
+		frame.setLocationRelativeTo(null);
 	}
 
 	/**
@@ -414,42 +414,19 @@ public class WorkoutTrackerController {
 	 * @param name
 	 * @return
 	 */
-	public static LineChart<String, Number> createGraph(WorkoutTracker tracker, String name) {
-		double maxWeight = 0;
-		double totalMax = 0;
-		double minWeight = 1000;
+	private static LineChart<String, Number> createGraph(WorkoutTracker tracker, String name, int selection) {
+		double maxYValue = Integer.MIN_VALUE;
+		double minYValue = Integer.MAX_VALUE;
+		double[] values = new double[2];
 
 		// defining a series
 		XYChart.Series series = new XYChart.Series();
 		series.setName("Max Weight Per Workout");
 
-		for (Workout Workout : tracker.getWorkoutList()) {
-			for (Exercise current : Workout.getExerciseArrayList()) {
-				if (current.getExerciseName().equals(name)) {
-					for (Set set : current.getSetList()) {
-						if (set.getWeight() < minWeight) {
-							minWeight = set.getWeight();
-						}
-
-						if (set.getWeight() > maxWeight) {
-							maxWeight = set.getWeight();
-						}
-
-						if (set.getWeight() > totalMax) {
-							totalMax = set.getWeight();
-						}
-					}
-
-					series.getData()
-							.add(new XYChart.Data(Workout.getStartTime().toString().substring(0, 10), maxWeight));
-
-					maxWeight = 0;
-				}
-			}
-		}
+		values = createGraphAux(tracker, name, series, selection);
 
 		final CategoryAxis xAxis = new CategoryAxis();
-		final NumberAxis yAxis = new NumberAxis(minWeight - 10, totalMax + 10, 5);
+		final NumberAxis yAxis = new NumberAxis(values[0], values[1], 5);
 		xAxis.setLabel("Date");
 		yAxis.setLabel("Weight (lbs");
 
@@ -460,5 +437,46 @@ public class WorkoutTrackerController {
 
 		return lineChart;
 	}
+	
+	/**
+	 * Returns the min and max values to be used for the Y axis in a double[].
+	 * @param tracker
+	 * @param name
+	 * @param series
+	 * @param selection
+	 * @return
+	 */
+	private static double[] createGraphAux(WorkoutTracker tracker, String name, XYChart.Series series, int selection) {
+		double currentValue = 0;
+		double maxYValue = Integer.MIN_VALUE;
+		double minYValue = Integer.MAX_VALUE;
+		double[] minAndMaxValues = new double[2];
+		
+		for (Workout Workout : tracker.getWorkoutList()) {
+			for (Exercise current : Workout.getExerciseArrayList()) {
+				if (current.getExerciseName().equals(name)) {
+						if (current.getMaxWeight() < minYValue) {
+							minYValue = current.getMaxWeight();
+						}
 
+						if (current.getMaxWeight() > maxYValue) {
+							maxYValue = current.getMaxWeight();
+						}
+						
+						currentValue = current.getMaxWeight();
+				
+					series.getData()
+							.add(new XYChart.Data(Workout.getStartTime().toString().substring(0, 10), currentValue));
+
+				}
+			}
+		}
+		
+		minAndMaxValues[0] = minYValue - 10;
+		minAndMaxValues[1] = maxYValue + 10;
+		
+		return minAndMaxValues;
+		
+		
+	}
 }

@@ -10,7 +10,7 @@ package model;
  */
 public class Set {
 
-	int reps;
+	double reps;
 	double weight;
 
 	/**
@@ -37,7 +37,7 @@ public class Set {
 	 * 
 	 * @return reps
 	 */
-	public int getReps() {
+	public double getReps() {
 		return this.reps;
 	}
 
@@ -73,7 +73,7 @@ public class Set {
 	 * 
 	 * @return
 	 */
-	public int increaseReps() {
+	public double increaseReps() {
 		this.reps += 1;
 		return this.reps;
 	}
@@ -83,7 +83,7 @@ public class Set {
 	 * 
 	 * @return reps
 	 */
-	public int decreaseReps() {
+	public double decreaseReps() {
 		this.reps -= 1;
 		return this.reps;
 	}
