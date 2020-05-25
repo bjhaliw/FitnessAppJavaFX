@@ -2,9 +2,11 @@
 Fitness App with Java FX GUI
 
 Current Features:
+- Command line interaction with multiple menus
 - Save/Load current and past workouts
-- Manipulate current/past workouts
-- Create and delete exercises
+- Save/Load list containing all possible exercises by muscle groups
+- Manipulate current/past workouts to add/remove/edit exercises performed
+- Manipulate exercise list to add/remove/edit exercises to be performed
 - View statistics such as max weight, reps, volume, one rep max for an exercise
 
 In-Work Features:
