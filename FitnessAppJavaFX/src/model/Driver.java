@@ -1,5 +1,7 @@
 package model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -32,6 +34,9 @@ public class Driver {
 
 		list.loadExerciseList("C:\\Users\\bjhal\\Desktop\\ExerciseList.txt");
 		tracker.loadWorkoutList("C:\\Users\\bjhal\\Desktop\\WorkoutList.txt");
+		System.out.println(LocalDateTime.now());
+		
+		System.out.println(LocalDate.of(2020, 01, 3).atTime(12,2));
 
 		while (selection != 4) {
 			

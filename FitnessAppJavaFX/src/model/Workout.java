@@ -1,6 +1,8 @@
 package model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +13,7 @@ import java.util.ArrayList;
  * @author Brenton Haliw
  *
  */
-public class Workout {
+public class Workout implements Comparable<Workout> {
 
 	ArrayList<Exercise> exerciseArrayList;
 	LocalDateTime startTime;
@@ -53,6 +55,12 @@ public class Workout {
 	public ArrayList<Exercise> getExerciseArrayList() {
 		return this.exerciseArrayList;
 	}
+	
+	public void setStartTime(String[] dateArray, String[] timeArray) {
+		this.startTime = LocalDate.of(Integer.parseInt(dateArray[0]),Integer.parseInt(dateArray[1]), 
+				Integer.parseInt(dateArray[2])).atTime(Integer.parseInt(timeArray[0]), Integer.parseInt(timeArray[1]),1);
+		
+	}
 
 	/**
 	 * Prints out the items in the Exercise ArrayList
@@ -69,6 +77,11 @@ public class Workout {
 		}
 
 		return output;
+	}
+
+	@Override
+	public int compareTo(Workout otherWorkout) {
+		return this.startTime.compareTo(otherWorkout.startTime);
 	}
 
 }

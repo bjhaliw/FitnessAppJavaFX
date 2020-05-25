@@ -1,6 +1,8 @@
 package model;
 
 import java.awt.Dimension;
+import java.io.IOException;
+import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import javax.swing.JFrame;
@@ -14,19 +16,21 @@ import javafx.scene.chart.XYChart;
 
 public class WorkoutTrackerController {
 
+	public static final int RETURN_TO_MENU = 0;
 	public static final int MAX_WEIGHT_STATS = 1;
 	public static final int MAX_REPS_STATS = 2;
 	public static final int ONE_REP_MAX = 3;
 	public static final int TOTAL_VOLUME = 4;
 
 	public static void workoutTrackerOptions(WorkoutTracker tracker, ExerciseList list, Scanner scanner) {
-		int selection = 0;
+		int selection = Integer.MAX_VALUE;
 
-		while (selection != 4) {
+		while (selection != RETURN_TO_MENU) {
 			System.out.println();
 			System.out.println("**** Workout Tracker Menu ****");
 			System.out.println(
-					"1. View past workouts\n2. Edit a past workout\n" + "3. View statistics\n4. Return to main menu");
+					"1. View past workouts\n2. Edit a past workout\n" + "3. View statistics\n"
+							+ "4. Add past workout\n0. Return to main menu");
 			System.out.print("Enter your selection: ");
 
 			try {
@@ -43,6 +47,9 @@ public class WorkoutTrackerController {
 					viewStatisticsOptions(tracker, list, scanner);
 					break;
 				case 4:
+					addPastWorkout(tracker, list, scanner);
+					break;
+				case RETURN_TO_MENU:
 					System.out.println("Returning to main menu");
 					break;
 				default:
@@ -56,6 +63,54 @@ public class WorkoutTrackerController {
 				System.out.println("Please enter a valid input (NUMBERS ONLY)");
 				scanner.nextLine();
 				selection = Integer.MAX_VALUE;
+			}
+		}
+	}
+	
+	/**
+	 * Adds a workout to the WorkoutTracker object. Allows the user to create past workouts
+	 * and then orders them in the tracker's ArrayList of workouts by date.
+	 * @param tracker
+	 * @param list
+	 * @param scanner
+	 */
+	public static void addPastWorkout(WorkoutTracker tracker, ExerciseList list, Scanner scanner) {
+		int selection = Integer.MAX_VALUE;
+		Workout workout;
+		String date, time;
+		String[] dateArray, timeArray;
+		
+
+		while (selection != RETURN_TO_MENU) {
+			System.out.println();
+			System.out.println("**** Add Workout Menu ****");
+			System.out.println(
+					"1. Create a new workout\n0. Return to main menu");
+			System.out.print("Enter your selection: ");
+			
+			selection = scanner.nextInt();
+			scanner.nextLine();
+			
+			switch(selection) {
+			case RETURN_TO_MENU:
+				System.out.println("Now returning to Workout Tracker Menu");
+				return;
+			case 1:
+				workout = new Workout();
+				System.out.println("What date did this workout occur?");
+				System.out.print("Enter date (YYYY-MM-DD): ");
+				date = scanner.nextLine();
+				System.out.println("What time did this workout occur?");
+				System.out.print("Enter time (HH:MM in 24 hour time): ");
+				time = scanner.nextLine();
+				dateArray = date.split("-");
+				timeArray = time.split(":");
+				workout.setStartTime(dateArray, timeArray);
+				tracker.addWorkout(workout);
+				Collections.sort(tracker.getWorkoutList());
+				System.out.println("Workout with start time: " + workout.getStartTime() 
+									+ " has been added to the tracker");
+				break;
 			}
 		}
 	}
@@ -87,7 +142,7 @@ public class WorkoutTrackerController {
 			selection = scanner.nextInt();
 			scanner.nextLine();
 
-			if (selection == 0) {
+			if (selection == RETURN_TO_MENU) {
 				return null;
 			}
 			workout = tracker.workoutList.get(selection - 1);
@@ -141,7 +196,7 @@ public class WorkoutTrackerController {
 
 			scanner.nextLine();
 
-			if (selection == 0) {
+			if (selection == RETURN_TO_MENU) {
 				return; // Back to tracker menu
 			}
 
@@ -165,23 +220,32 @@ public class WorkoutTrackerController {
 	}
 
 	public static void viewStatisticsOptions(WorkoutTracker tracker, ExerciseList list, Scanner scanner) {
-		int selection = 0;
+		int selection = Integer.MAX_VALUE;
+		
 
-		while (selection != 5) {
+		while (selection != RETURN_TO_MENU) {
 			System.out.println();
 			System.out.println("**** View Workout Statistics Menu ****");
 			System.out.println("1. View Max Weight\n2. View Max Reps\n"
-					+ "3. View One Rep Max\n4. View Max Total Volume\n5. Return to tracker menu");
+					+ "3. View One Rep Max\n4. View Max Total Volume\n"
+					+ "5. Save Statistics to Excel Document\n0. Return to tracker menu");
 			System.out.print("Enter your selection: ");
 
 			try {
 				selection = scanner.nextInt();
 
-				if (selection == 5) {
+				if (selection == RETURN_TO_MENU) {
 					System.out.println("Returning to tracker menu");
 					return;
-				} else if (selection >= 1 && selection <= 5) {
+				} else if (selection >= 1 && selection <= 4) {
 					viewStatisticsAux(tracker, list, scanner, selection);
+				} else if (selection == 5){
+					try {
+						Statistics.saveGraphExcel(tracker, scanner);
+					} catch (IOException e) {
+						System.out.println("Writing to Excel Document Failed");
+						e.printStackTrace();
+					}
 				} else {
 					System.out.println("Please enter a valid selection");
 				}
@@ -202,8 +266,9 @@ public class WorkoutTrackerController {
 		while (selection != 5) {
 			System.out.println();
 			System.out.println("**** View Specific Workout Statistics ****");
-			System.out.println("1. Back exercises\n2. Chest exercises\n"
-					+ "3. Legs exercises\n4. Shoulders exercises\n5. Back to statistics menu");
+			System.out.println("1. Abs Exercises\n2.Back exercises\n3. Biceps exercises\n"
+					+ "4. Cardio exercises\n5. Chest exercises\n6.Legs exercises\n7. Shoulders Exercises"
+					+ "\n8. Triceps exercises\n0. Back to statistics menu");
 
 			System.out.print("Please make your selection: ");
 
@@ -212,40 +277,62 @@ public class WorkoutTrackerController {
 
 				switch (selection) {
 				case 1:
+					System.out.println(list.printExerciseList(ExerciseList.ABS));
+					System.out.print("Select exercise: ");
+					exerciseSelection = scanner.nextInt();
+					name = list.getAbsExercises().get(exerciseSelection - 1).getExerciseName();
+					break;
+				case 2:
 					System.out.println(list.printExerciseList(ExerciseList.BACK));
 					System.out.print("Select exercise: ");
 					exerciseSelection = scanner.nextInt();
 					name = list.getBackExercises().get(exerciseSelection - 1).getExerciseName();
-					max = getMaxValues(tracker, name, numSelection);
+					break;					
+				case 3:
+					System.out.println(list.printExerciseList(ExerciseList.BICEPS));
+					System.out.print("Select exercise: ");
+					exerciseSelection = scanner.nextInt();
+					name = list.getBicepsExercises().get(exerciseSelection - 1).getExerciseName();
+					break;			
+				case 4:
+					System.out.println(list.printExerciseList(ExerciseList.CARDIO));
+					System.out.print("Select exercise: ");
+					exerciseSelection = scanner.nextInt();
+					name = list.getCardioExercises().get(exerciseSelection - 1).getExerciseName();
 					break;
-				case 2:
+				case 5:
 					System.out.println(list.printExerciseList(ExerciseList.CHEST));
 					System.out.print("Select exercise: ");
 					exerciseSelection = scanner.nextInt();
 					name = list.getChestExercises().get(exerciseSelection - 1).getExerciseName();
-					max = getMaxValues(tracker, name, numSelection);
 					break;
-				case 3:
+				case 6:
 					System.out.println(list.printExerciseList(ExerciseList.LEGS));
 					System.out.print("Select exercise: ");
 					exerciseSelection = scanner.nextInt();
 					name = list.getLegsExercises().get(exerciseSelection - 1).getExerciseName();
-					max = getMaxValues(tracker, name, numSelection);
 					break;
-				case 4:
+				case 7:
 					System.out.println(list.printExerciseList(ExerciseList.SHOULDERS));
 					System.out.print("Select exercise: ");
 					exerciseSelection = scanner.nextInt();
 					name = list.getChestExercises().get(exerciseSelection - 1).getExerciseName();
-					max = getMaxValues(tracker, name, numSelection);
+					break;				
+				case 8:
+					System.out.println(list.printExerciseList(ExerciseList.TRICEPS));
+					System.out.print("Select exercise: ");
+					exerciseSelection = scanner.nextInt();
+					name = list.getTricepsExercises().get(exerciseSelection - 1).getExerciseName();
 					break;
-				case 5:
+				case RETURN_TO_MENU:
 					System.out.println("Returning to statistics menu.");
 					return;
 				default:
 					System.out.println("Please enter a valid selection.");
 					continue;
 				}
+				
+				max = getMaxValues(tracker, name, numSelection);
 				
 				if (max == Integer.MIN_VALUE) {
 					System.out.println(name + " does not have any statistical data.");

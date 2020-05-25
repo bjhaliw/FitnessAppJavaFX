@@ -168,7 +168,7 @@ public class WorkoutTracker {
 				int weight = current.indexOf("Weight:");
 
 				this.workoutList.get(workoutNum).getExercise(exerciseNum)
-						.addSet(new Set(Integer.parseInt(current.substring(reps + 6, weight - 1)),
+						.addSet(new Set(Double.parseDouble(current.substring(reps + 6, weight - 1)),
 								Double.parseDouble(current.substring(weight + 7, current.length()))));
 
 			}
