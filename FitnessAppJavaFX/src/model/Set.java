@@ -27,7 +27,7 @@ public class Set {
 	 * @param reps
 	 * @param weight
 	 */
-	public Set(int reps, double weight) {
+	public Set(double reps, double weight) {
 		this.reps = reps;
 		this.weight = weight;
 	}
