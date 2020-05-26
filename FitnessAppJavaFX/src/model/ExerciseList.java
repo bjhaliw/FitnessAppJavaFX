@@ -5,15 +5,11 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Scanner;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.Comparator;
 
 /**
  * This class creates multiple ArrayLists for the different types of body parts
@@ -47,6 +43,10 @@ public class ExerciseList  {
 
 	
 
+	/**
+	 * Default constructor for the ExerciseList class. Initializes all of
+	 * the ArrayList objects to track exercises for different muscle groups.
+	 */
 	public ExerciseList() {
 		absList = new ArrayList<>();
 		backList = new ArrayList<>();
@@ -306,6 +306,8 @@ public class ExerciseList  {
 			scanner.close();
 
 		} catch (FileNotFoundException e) {
+			System.out.println("Was not able to read the file containing the Exercise List");
+			System.out.println("The standard Exercise List will be generated instead");
 			createStandardList();
 		}
 
@@ -317,7 +319,7 @@ public class ExerciseList  {
 	 */
 	public void createStandardList() {
 		
-		//////////////ABS EXERCISES //////////////
+		////////////// ABS EXERCISES //////////////
 		this.absList.add(new Exercise("Crunch", "Abs"));
 		this.absList.add(new Exercise("Hanging Knee Raise", "Abs"));
 		this.absList.add(new Exercise("Russian Twists", "Abs"));
@@ -338,13 +340,13 @@ public class ExerciseList  {
 		this.backList.add(new Exercise("Barbell Shrug", "Back"));
 		this.backList.add(new Exercise("Cable Row", "Back"));
 		
-		//////////////BICEPS EXERCISES //////////////
+		////////////// BICEPS EXERCISES //////////////
 		this.bicepsList.add(new Exercise("Dumbell Curl", "Biceps"));
 		this.bicepsList.add(new Exercise("Cable Curl", "Biceps"));
 		this.bicepsList.add(new Exercise("Hammer Curl", "Biceps"));
 		this.bicepsList.add(new Exercise("Barbell Curl", "Biceps"));
 		
-		//////////////CARDIO EXERCISES //////////////
+		////////////// CARDIO EXERCISES //////////////
 		this.cardioList.add(new Exercise("Treadmill Running", "Cardio"));
 		this.cardioList.add(new Exercise("Treadmill Walking", "Cardio"));
 		this.cardioList.add(new Exercise("Outside Running", "Cardio"));
@@ -354,7 +356,7 @@ public class ExerciseList  {
 		this.cardioList.add(new Exercise("Stationary Biking", "Cardio"));
 		this.cardioList.add(new Exercise("Stair Stepper", "Cardio"));
 
-		//////////////CHEST EXERCISES //////////////
+		////////////// CHEST EXERCISES //////////////
 		this.chestList.add(new Exercise("Flat Barbell Bench Press", "Chest"));
 		this.chestList.add(new Exercise("Flat Dumbell Flies", "Chest"));
 		this.chestList.add(new Exercise("Incline Barbell Bench Press", "Chest"));
@@ -362,7 +364,7 @@ public class ExerciseList  {
 		this.chestList.add(new Exercise("Incline Cable Flies", "Chest"));
 		this.chestList.add(new Exercise("High Cable Crossover", "Chest"));
 
-		//////////////LEGS EXERCISES //////////////
+		////////////// LEGS EXERCISES //////////////
 		this.legsList.add(new Exercise("Barbell Squat", "Legs"));
 		this.legsList.add(new Exercise("Good Mornings", "Legs"));
 		this.legsList.add(new Exercise("Dumbell Lunge", "Legs"));
@@ -372,7 +374,7 @@ public class ExerciseList  {
 		this.legsList.add(new Exercise("Cable Hip Thrust", "Legs"));
 		this.legsList.add(new Exercise("Romanian Deadlift", "Legs"));
 		
-		//////////////SHOULDERS EXERCISES //////////////
+		////////////// SHOULDERS EXERCISES //////////////
 		this.shouldersList.add(new Exercise("Overhead Press", "Shoulders"));
 		this.shouldersList.add(new Exercise("Lateral Dumbell Raise", "Shoulders"));
 		this.shouldersList.add(new Exercise("Front Dumbell Raise", "Shoulders"));
@@ -380,11 +382,12 @@ public class ExerciseList  {
 		this.shouldersList.add(new Exercise("Dumbell Shoulder Press", "Shoulders"));
 		this.shouldersList.add(new Exercise("Cable Face Pull", "Shoulders"));
 		
-		//////////////TRICEPS EXERCISES //////////////
+		////////////// TRICEPS EXERCISES //////////////
 		this.tricepsList.add(new Exercise("Overhead Cable Extension", "Triceps"));
 		this.tricepsList.add(new Exercise("Cable Rope Pushdown", "Triceps"));
 		this.tricepsList.add(new Exercise("Dumbell Skullcrushers", "Triceps"));
 		
+		///// SORTING THE LISTS BY ALPHABETICAL ORDER /////
 		Collections.sort(this.absList);	
 		Collections.sort(this.backList);
 		Collections.sort(this.bicepsList);	
@@ -426,6 +429,11 @@ public class ExerciseList  {
 		return output;
 	}
 	
+	/**
+	 * Helper method for the printExerciseList method
+	 * @param list
+	 * @return output
+	 */
 	private String printExerciseListAux(ArrayList<Exercise> list) {
 		String output = "";
 		int i = 1;
@@ -477,38 +485,84 @@ public class ExerciseList  {
 	
 	
 	//////// OBSERVABLE LISTS FOR JAVAFX GUI //////// 
+	
+	/**
+	 * Returns an ObservableList object for abs exercises to
+	 * be used in JavaFX applications.
+	 * @return absList
+	 */
 	public ObservableList<Exercise> getAbsExercises() {
 		return addObservableListAux(absList);
 	}
 
+	/**
+	 * Returns an ObservableList object for back exercises to
+	 * be used in JavaFX applications.
+	 * @return backList
+	 */
 	public ObservableList<Exercise> getBackExercises() {
 		return addObservableListAux(backList);
 	}
 
+	/**
+	 * Returns an ObservableList object for biceps exercises to
+	 * be used in JavaFX applications.
+	 * @return bicepsList
+	 */
 	public ObservableList<Exercise> getBicepsExercises() {
 		return addObservableListAux(bicepsList);
 	}
 
+	/**
+	 * Returns an ObservableList object for cardio exercises to
+	 * be used in JavaFX applications.
+	 * @return cardioList
+	 */
 	public ObservableList<Exercise> getCardioExercises() {
 		return addObservableListAux(cardioList);
 	}
 	
+	/**
+	 * Returns an ObservableList object for chest exercises to
+	 * be used in JavaFX applications.
+	 * @return chestList
+	 */
 	public ObservableList<Exercise> getChestExercises() {
 		return addObservableListAux(chestList);
 	}
 	
+	/**
+	 * Returns an ObservableList object for legs exercises to
+	 * be used in JavaFX applications.
+	 * @return legsList
+	 */
 	public ObservableList<Exercise> getLegsExercises() {
 		return addObservableListAux(legsList);
 	}
 
+	/**
+	 * Returns an ObservableList object for shoulders exercises to
+	 * be used in JavaFX applications.
+	 * @return shouldersList
+	 */
 	public ObservableList<Exercise> getShouldersExercises() {
 		return addObservableListAux(shouldersList);
 	}
 	
+	/**
+	 * Returns an ObservableList object for triceps exercises to
+	 * be used in JavaFX applications.
+	 * @return tricepsList
+	 */
 	public ObservableList<Exercise> getTricepsExercises() {
 		return addObservableListAux(tricepsList);
 	}
 	
+	/**
+	 * Helper method to add ArrayList objects to an ObservableList object
+	 * @param list
+	 * @return ObservableList object
+	 */
 	private ObservableList<Exercise>  addObservableListAux(ArrayList<Exercise> list) {
 		ObservableList<Exercise> exercises = FXCollections.observableArrayList();
 		for (Exercise exercise : list) {
@@ -518,6 +572,10 @@ public class ExerciseList  {
 		return exercises;
 	}
 
+	/**
+	 * Creates and returns an ObservableList object with different types of exercises
+	 * @return ObservableList object
+	 */
 	public ObservableList<Exercise> getTypeExercises() {
 		ObservableList<Exercise> exercises = FXCollections.observableArrayList();
 

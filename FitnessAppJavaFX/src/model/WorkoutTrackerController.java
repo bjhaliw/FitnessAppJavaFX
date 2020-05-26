@@ -16,7 +16,6 @@ import javafx.scene.chart.XYChart;
 
 public class WorkoutTrackerController {
 
-	public static final int RETURN_TO_MENU = 0;
 	public static final int MAX_WEIGHT_STATS = 1;
 	public static final int MAX_REPS_STATS = 2;
 	public static final int ONE_REP_MAX = 3;
@@ -25,7 +24,7 @@ public class WorkoutTrackerController {
 	public static void workoutTrackerOptions(WorkoutTracker tracker, ExerciseList list, Scanner scanner) {
 		int selection = Integer.MAX_VALUE;
 
-		while (selection != RETURN_TO_MENU) {
+		while (selection != Driver.RETURN_TO_MENU) {
 			System.out.println();
 			System.out.println("**** Workout Tracker Menu ****");
 			System.out.println(
@@ -49,7 +48,7 @@ public class WorkoutTrackerController {
 				case 4:
 					addPastWorkout(tracker, list, scanner);
 					break;
-				case RETURN_TO_MENU:
+				case Driver.RETURN_TO_MENU:
 					System.out.println("Returning to main menu");
 					break;
 				default:
@@ -81,7 +80,7 @@ public class WorkoutTrackerController {
 		String[] dateArray, timeArray;
 		
 
-		while (selection != RETURN_TO_MENU) {
+		while (selection != Driver.RETURN_TO_MENU) {
 			System.out.println();
 			System.out.println("**** Add Workout Menu ****");
 			System.out.println(
@@ -92,7 +91,7 @@ public class WorkoutTrackerController {
 			scanner.nextLine();
 			
 			switch(selection) {
-			case RETURN_TO_MENU:
+			case Driver.RETURN_TO_MENU:
 				System.out.println("Now returning to Workout Tracker Menu");
 				return;
 			case 1:
@@ -142,7 +141,7 @@ public class WorkoutTrackerController {
 			selection = scanner.nextInt();
 			scanner.nextLine();
 
-			if (selection == RETURN_TO_MENU) {
+			if (selection == Driver.RETURN_TO_MENU) {
 				return null;
 			}
 			workout = tracker.workoutList.get(selection - 1);
@@ -196,7 +195,7 @@ public class WorkoutTrackerController {
 
 			scanner.nextLine();
 
-			if (selection == RETURN_TO_MENU) {
+			if (selection == Driver.RETURN_TO_MENU) {
 				return; // Back to tracker menu
 			}
 
@@ -223,7 +222,7 @@ public class WorkoutTrackerController {
 		int selection = Integer.MAX_VALUE;
 		
 
-		while (selection != RETURN_TO_MENU) {
+		while (selection != Driver.RETURN_TO_MENU) {
 			System.out.println();
 			System.out.println("**** View Workout Statistics Menu ****");
 			System.out.println("1. View Max Weight\n2. View Max Reps\n"
@@ -234,7 +233,7 @@ public class WorkoutTrackerController {
 			try {
 				selection = scanner.nextInt();
 
-				if (selection == RETURN_TO_MENU) {
+				if (selection == Driver.RETURN_TO_MENU) {
 					System.out.println("Returning to tracker menu");
 					return;
 				} else if (selection >= 1 && selection <= 4) {
@@ -324,7 +323,7 @@ public class WorkoutTrackerController {
 					exerciseSelection = scanner.nextInt();
 					name = list.getTricepsExercises().get(exerciseSelection - 1).getExerciseName();
 					break;
-				case RETURN_TO_MENU:
+				case Driver.RETURN_TO_MENU:
 					System.out.println("Returning to statistics menu.");
 					return;
 				default:
@@ -448,8 +447,6 @@ public class WorkoutTrackerController {
 	 * @return
 	 */
 	private static LineChart<String, Number> createGraph(WorkoutTracker tracker, String name, int selection) {
-		double maxYValue = Integer.MIN_VALUE;
-		double minYValue = Integer.MAX_VALUE;
 		double[] values = new double[2];
 		String statType = "";
 

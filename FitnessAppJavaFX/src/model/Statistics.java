@@ -3,15 +3,11 @@ package model;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Scanner;
-
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -57,7 +53,6 @@ public class Statistics {
 	 */
 	public static void saveGraphExcel(WorkoutTracker tracker, Scanner scanner) throws IOException {
 		XSSFWorkbook workbook = new XSSFWorkbook();
-		LocalDateTime time = LocalDateTime.now();
 
 		////// WRITING THE VALUES ///////
 		writeMaxValues(tracker, workbook);
@@ -72,7 +67,7 @@ public class Statistics {
 		File excelFile = null;
 		FileOutputStream fileOut = null;
 
-		fc.setFileSelectionMode(fc.FILES_AND_DIRECTORIES);
+		fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		fc.setDialogTitle("Save File");
 		fc.setCurrentDirectory(new File(System.getProperties().getProperty("user.home") + "\\Desktop"));
 
@@ -145,7 +140,7 @@ public class Statistics {
 		XSSFSheet sheet = null;
 		Row row;
 		Cell cell;
-
+		
 		for (Workout workout : tracker.getWorkoutList()) {
 			for (Exercise exercise : workout.getExerciseArrayList()) {
 
@@ -211,8 +206,6 @@ public class Statistics {
 			sheet.autoSizeColumn(2);
 			sheet.autoSizeColumn(3);
 			sheet.autoSizeColumn(4);
-
-			sheet.setVerticallyCenter(true);
 		}
 	}
 
@@ -230,22 +223,8 @@ public class Statistics {
 
 		for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
 			sheet = workbook.getSheetAt(i);
-
-			XSSFDrawing drawing = sheet.createDrawingPatriarch();
-			XSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 6, 0, 15, 25);
-
-			XSSFChart chart = drawing.createChart(anchor);
-			chart.setTitleText("Max Weight Each Day");
-			chart.setTitleOverlay(false);
-
-			XDDFChartLegend legend = chart.getOrAddLegend();
-			legend.setPosition(LegendPosition.TOP_RIGHT);
-
-			XDDFCategoryAxis bottomAxis = chart.createCategoryAxis(AxisPosition.BOTTOM);
-			bottomAxis.setTitle("Date");
-			XDDFValueAxis leftAxis = chart.createValueAxis(AxisPosition.LEFT);
-			leftAxis.setTitle("Max Weight (lbs)");
-
+			
+			///// READING THE ROWS AND COLUMNS TO GATHER OUR DATA TO BE GRAPHED /////
 			XDDFDataSource<String> dates = XDDFDataSourcesFactory.fromStringCellRange(sheet,
 					new CellRangeAddress(1, sheet.getLastRowNum(), 0, 0));
 
@@ -260,6 +239,22 @@ public class Statistics {
 
 			XDDFNumericalDataSource<Double> oneRepMax = XDDFDataSourcesFactory.fromNumericCellRange(sheet,
 					new CellRangeAddress(1, sheet.getLastRowNum(), 4, 4));
+			
+			///// CREATING MAX WEIGHT AND ONE REP MAX GRAPH /////
+			XSSFDrawing drawing = sheet.createDrawingPatriarch();
+			XSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 6, 0, 15, 25);
+
+			XSSFChart chart = drawing.createChart(anchor);
+			chart.setTitleText("Max Weight Each Day");
+			chart.setTitleOverlay(false);
+
+			XDDFChartLegend legend = chart.getOrAddLegend();
+			legend.setPosition(LegendPosition.TOP_RIGHT);
+
+			XDDFCategoryAxis bottomAxis = chart.createCategoryAxis(AxisPosition.BOTTOM);
+			bottomAxis.setTitle("Date");
+			XDDFValueAxis leftAxis = chart.createValueAxis(AxisPosition.LEFT);
+			leftAxis.setTitle("Max Weight (lbs)");
 
 			XDDFLineChartData data = (XDDFLineChartData) chart.createData(ChartTypes.LINE, bottomAxis, leftAxis);
 

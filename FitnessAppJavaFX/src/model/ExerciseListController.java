@@ -6,13 +6,13 @@ import java.util.Scanner;
 public class ExerciseListController {
 
 	public static void exerciseListOptions(ExerciseList list, Scanner scanner) {
-		int selection = 0;
+		int selection = Integer.MAX_VALUE;
 
-		while (selection != 4) {
+		while (selection != Driver.RETURN_TO_MENU) {
 			System.out.println();
 			System.out.println("***** Exercise List Menu *****");
 			System.out.println(
-					"1. Create a new exercise\n2. Remove an exercise\n" + "3. View Exercises\n4. Return to main menu");
+					"1. Create a new exercise\n2. Remove an exercise\n" + "3. View Exercises\n0. Return to main menu");
 			System.out.print("Enter your selection: ");
 
 			try {
@@ -29,9 +29,9 @@ public class ExerciseListController {
 				case 3: // View Back exercises
 					viewExercisesMenu(list, scanner);
 					break;
-				case 4:
+				case Driver.RETURN_TO_MENU:
 					System.out.println("Returning to main menu.");
-					break;
+					return;
 				default:
 					System.out.println("Please enter a valid number.");
 					break;
@@ -46,14 +46,14 @@ public class ExerciseListController {
 	}
 
 	public static void viewExercisesMenu(ExerciseList list, Scanner scanner) {
-		int selection = 0;
+		int selection = Integer.MAX_VALUE;
 
-		while (selection != 9) {
+		while (selection != Driver.RETURN_TO_MENU) {
 			System.out.println();
 			System.out.println("***** View Exercises Menu *****");
 			System.out.println("1. Abs Exercises\n2. Back Exercises\n3. Biceps Exercises"
 					+ "\n4. Cardio Exercises\n5. Chest Exercises\n6. Legs Exercises"
-					+ "\n7. Shoulders Exercises\n8. Triceps Exercises\n9. Return to Exercise List Menu");
+					+ "\n7. Shoulders Exercises\n8. Triceps Exercises\n0. Return to Exercise List Menu");
 			System.out.print("Please enter your selection: ");
 
 			try {
@@ -93,9 +93,9 @@ public class ExerciseListController {
 					System.out.println("//// Triceps Exercises ////");
 					System.out.println(list.printExerciseList(ExerciseList.TRICEPS));
 					break;
-				case 9:
+				case Driver.RETURN_TO_MENU:
 					System.out.println("Now returning to Exercise List Menu");
-					break;
+					return;
 				default:
 					System.out.println("Please enter a valid number.");
 					break;
@@ -110,7 +110,8 @@ public class ExerciseListController {
 	}
 
 	public static void createExercise(ExerciseList list, Scanner scanner) {
-		String name, type;
+		String name, type = "";
+		int selection = Integer.MAX_VALUE;
 		scanner.nextLine();
 
 		
@@ -121,21 +122,70 @@ public class ExerciseListController {
 		System.out.print("Please enter the name of the new exercise: ");
 		name = scanner.nextLine();
 
-		System.out.print("Please enter the type of exercise: ");
-		type = scanner.nextLine();
+		while(selection != Driver.RETURN_TO_MENU) {
+			System.out.println("Please select the type of exercise:");
+			System.out.println("1. Abs Exercises\n2. Back Exercises\n3. Biceps Exercises" + 
+					"\n4. Cardio Exercises\n5. Chest Exercises\n6. Legs Exercises" + 
+					"\n7. Shoulders Exercises\n8. Triceps Exercises\n0. Return to Exercise List Menu");
+			System.out.print("Enter your selection: ");
+			
+			try {
+				selection = scanner.nextInt();
+				
+				switch(selection) {
+				case 1:
+					type = "Abs";
+					break;
+				case 2:
+					type = "Back";
+					break;
+				case 3: 
+					type = "Biceps";
+					break;
+				case 4:
+					type = "Cardio";
+					break;
+				case 5:
+					type = "Chest";
+					break;
+				case 6:
+					type = "Legs";
+					break;
+				case 7:
+					type = "Shoulders";
+					break;
+				case 8:
+					type = "Triceps";
+					break;
+				case Driver.RETURN_TO_MENU:
+					System.out.println("Returning to previous menu");
+					return;
+				default:
+					System.out.println("Please enter a valid selection");
+					break;
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("Please enter a valid input (NUMBERS ONLY)");
+				System.out.println();
+				scanner.nextLine();
+				selection = Integer.MAX_VALUE;
+			}
+		}
 
 		list.addExercise(new Exercise(name, type));
 	}
 
 	public static void deleteExerciseFromList(ExerciseList list, Scanner scanner) {
-		int selection = 0;
+		int selection = Integer.MAX_VALUE;
 		int exerciseSelection = 0;
 
-		while (selection != 5) {
+		while (selection != Driver.RETURN_TO_MENU) {
 			System.out.println();
 			System.out.println("**** Exercise Deletion ****");
 			System.out.println("Please select the type of exercise:");
-			System.out.println("1. Back\n2. Chest\n3. Legs\n4. Shoulders\n5. Back to exercise list menu");
+			System.out.println("1. Abs Exercises\n2. Back Exercises\n3. Biceps Exercises" + 
+					"\n4. Cardio Exercises\n5. Chest Exercises\n6. Legs Exercises" + 
+					"\n7. Shoulders Exercises\n8. Triceps Exercises\n0. Return to Exercise List Menu");
 			System.out.print("Enter your selection: ");
 
 			try {
@@ -143,36 +193,59 @@ public class ExerciseListController {
 
 				switch (selection) {
 				case 1:
+					System.out.println(list.printExerciseList(ExerciseList.ABS));
+					System.out.print("Select exercise to be removed: ");
+					exerciseSelection = scanner.nextInt();
+					list.removeExercise(list.getAbsExercises().get(exerciseSelection - 1));
+					break;		
+				case 2:
 					System.out.println(list.printExerciseList(ExerciseList.BACK));
 					System.out.print("Select exercise to be removed: ");
 					exerciseSelection = scanner.nextInt();
 					list.removeExercise(list.getBackExercises().get(exerciseSelection - 1));
 					break;
-				case 2:
+				case 3:
+					System.out.println(list.printExerciseList(ExerciseList.CARDIO));
+					System.out.print("Select exercise to be removed: ");
+					exerciseSelection = scanner.nextInt();
+					list.removeExercise(list.getCardioExercises().get(exerciseSelection - 1));
+					break;
+				case 4:
+					System.out.println(list.printExerciseList(ExerciseList.BICEPS));
+					System.out.print("Select exercise to be removed: ");
+					exerciseSelection = scanner.nextInt();
+					list.removeExercise(list.getBicepsExercises().get(exerciseSelection - 1));
+					break;
+				case 5:
 					System.out.println(list.printExerciseList(ExerciseList.CHEST));
 					System.out.print("Select exercise to be removed: ");
 					exerciseSelection = scanner.nextInt();
 					list.removeExercise(list.getChestExercises().get(exerciseSelection - 1));
 					break;
-				case 3:
+				case 6:
 					System.out.println(list.printExerciseList(ExerciseList.LEGS));
 					System.out.print("Select exercise to be removed: ");
 					exerciseSelection = scanner.nextInt();
 					list.removeExercise(list.getLegsExercises().get(exerciseSelection - 1));
 					break;
-				case 4:
+				case 7:
 					System.out.println(list.printExerciseList(ExerciseList.SHOULDERS));
 					System.out.print("Select exercise to be removed: ");
 					exerciseSelection = scanner.nextInt();
 					list.removeExercise(list.getShouldersExercises().get(exerciseSelection - 1));
 					break;
-				case 5:
-					System.out.println("Returning to exercise list menu.");
+				case 8:
+					System.out.println(list.printExerciseList(ExerciseList.TRICEPS));
+					System.out.print("Select exercise to be removed: ");
+					exerciseSelection = scanner.nextInt();
+					list.removeExercise(list.getTricepsExercises().get(exerciseSelection - 1));
 					break;
+				case Driver.RETURN_TO_MENU:
+					System.out.println("Returning to exercise list menu.");
+					return;
 				default:
 					System.out.println("Please enter a valid selection.");
 					break;
-
 				}
 
 			} catch (InputMismatchException e) {

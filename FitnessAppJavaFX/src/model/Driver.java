@@ -1,20 +1,22 @@
 package model;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Driver {
 
+	public final static int RETURN_TO_MENU = 0;
+	
 	public static void main(String[] args) throws Exception {
-
-		
+	
 		ExerciseList list = new ExerciseList();
 		WorkoutTracker tracker = new WorkoutTracker();
 		Workout workout = new Workout();
 		int selection = 0;
 		Scanner scanner = new Scanner(System.in);
+		
+		
+		///// UNCOMMENT IF YOU WANT TO USE JFILECHOOSER TO SELECT FILES MANUALLY /////
 		/*
 		 * final JFileChooser fc = new JFileChooser(); File exerciseListFile = null,
 		 * workoutTrackerFile = null;
@@ -32,11 +34,9 @@ public class Driver {
 		 * tracker.loadworkoutList(workoutTrackerFile.getAbsolutePath()); }
 		 */
 
+		///// COMMENT OUT IF USING JFILECHOOSER /////
 		list.loadExerciseList("C:\\Users\\bjhal\\Desktop\\ExerciseList.txt");
 		tracker.loadWorkoutList("C:\\Users\\bjhal\\Desktop\\WorkoutList.txt");
-		System.out.println(LocalDateTime.now());
-		
-		System.out.println(LocalDate.of(2020, 01, 3).atTime(12,2));
 
 		while (selection != 4) {
 			
@@ -76,9 +76,11 @@ public class Driver {
 			}		
 		}
 
+		///// COMMENT OUT IF USING JFILECHOOSER /////
 		tracker.saveWorkoutList("C:\\Users\\bjhal\\Desktop\\WorkoutList.txt");
 		list.saveExerciseList("C:\\Users\\bjhal\\Desktop\\ExerciseList.txt");
 
+		///// UNCOMMENT IF USING JFILECHOOSER ABOVE /////
 		/*
 		 * if(exerciseListFile != null) {
 		 * list.saveExerciseList(exerciseListFile.getAbsolutePath()); }

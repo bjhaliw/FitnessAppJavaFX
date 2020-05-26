@@ -3,7 +3,6 @@ package gui;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.*;
 import javafx.scene.Scene;

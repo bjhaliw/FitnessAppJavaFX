@@ -8,14 +8,14 @@ public class WorkoutController {
 
 	public static void currentWorkoutOptions(Workout workout, ExerciseList list, Scanner scanner,
 			WorkoutTracker tracker) {
-		int selection = 0;
+		int selection = Integer.MAX_VALUE;
 
-		while (selection != 8) {
+		while (selection != Driver.RETURN_TO_MENU) {
 			System.out.println();
 			System.out.println("**** Current Workout Menu ****");
 			System.out.println("1. Create a new workout\n2. Add an exercise to current workout\n"
 					+ "3. Add a set to an exercise\n4. Remove exercise\n5. Remove set\n"
-					+ "6. Delete current workout\n7. View current workout\n8. Return to main menu");
+					+ "6. Delete current workout\n7. View current workout\n0. Return to main menu");
 			System.out.print("Please enter your selection: ");
 
 			try {
@@ -42,7 +42,7 @@ public class WorkoutController {
 				case 7:
 					workout.printExerciseArrayList();
 					break;
-				case 8:
+				case Driver.RETURN_TO_MENU:
 					System.out.println("Now returning to main menu.");
 					break;
 				default:
@@ -69,23 +69,22 @@ public class WorkoutController {
 	 */
 	public static void addExercise(Workout workout, ExerciseList list, Scanner scanner) {
 		String add = "";
-		final int returnToPreviousMenu = 9;
 		int selection = Integer.MAX_VALUE;
 		ArrayList<Exercise> exerciseList = new ArrayList<>();
 
-		while (selection != returnToPreviousMenu) {
+		while (selection != Driver.RETURN_TO_MENU) {
 
 			System.out.println();
 			System.out.println("**** Add Exercise to Workout ****");
 			System.out.println(
-					"1. Abs\n2. Back\n3. Biceps\n4. Cardio\n5. Chest\n6. Legs\n7. Shoulders\n8. Triceps\n9. Back to Workout Menu");
+					"1. Abs\n2. Back\n3. Biceps\n4. Cardio\n5. Chest\n6. Legs\n7. Shoulders\n8. Triceps\n0. Back to Workout Menu");
 			System.out.print("Please enter your selection: ");
 
 			try {
 				selection = scanner.nextInt();
 				scanner.nextLine();
 
-				if (selection == returnToPreviousMenu) {
+				if (selection == Driver.RETURN_TO_MENU) {
 					System.out.println("Now returning to Workout Menu");
 					return;
 				}
@@ -120,7 +119,7 @@ public class WorkoutController {
 				default:
 					System.out.println("Please select a valid number");
 
-				} 
+				}
 
 				System.out.println(add);
 				System.out.println("Please select an exercise: ");
@@ -149,39 +148,50 @@ public class WorkoutController {
 	 */
 	public static void addSet(Workout workout, Scanner scanner) {
 		Exercise exercise;
-		int selection;
+		int selection = Integer.MAX_VALUE;
 		int reps = 0;
 		double weight = 0;
+		
+		if(workout.getExerciseArrayList().size() == 0) {
+			System.out.println("There are currently no loaded exercises for this workout");
+			return;
+		}
 
-		System.out.println();
-		System.out.println("**** Add Set to Exercise ****");
-		System.out.println(workout.printExerciseArrayList());
-		System.out.print("Select the exercise you wish to add a set to:");
+		while (selection != Driver.RETURN_TO_MENU) {
+			System.out.println();
+			System.out.println("**** Add Set to Exercise ****");
+			System.out.println(workout.printExerciseArrayList());
+			System.out.print("Select the exercise you wish to add a set to or 0 to return to previous menu: ");
 
-		try {
-			selection = scanner.nextInt();
+			try {
+				selection = scanner.nextInt();
 
-			exercise = workout.exerciseArrayList.get(selection - 1);
+				if (selection == Driver.RETURN_TO_MENU) {
+					return;
+				}
 
-			System.out.print("Enter the reps done: ");
-			reps = scanner.nextInt();
-			scanner.nextLine();
+				exercise = workout.exerciseArrayList.get(selection - 1);
 
-			System.out.print("Enter the weight used: ");
-			weight = scanner.nextDouble();
-			scanner.nextLine();
+				System.out.print("Enter the reps done: ");
+				reps = scanner.nextInt();
+				scanner.nextLine();
 
-			System.out.println(reps);
-			System.out.println(weight);
+				System.out.print("Enter the weight used: ");
+				weight = scanner.nextDouble();
+				scanner.nextLine();
 
-			exercise.addSet(new Set(reps, weight));
+				System.out.println(reps);
+				System.out.println(weight);
 
-			System.out.println("Set has been successfully added!");
+				exercise.addSet(new Set(reps, weight));
 
-		} catch (InputMismatchException e) {
-			System.out.println("Please enter a valid input (NUMBERS ONLY)");
-			scanner.nextLine();
-			selection = Integer.MAX_VALUE;
+				System.out.println("Set has been successfully added!");
+
+			} catch (InputMismatchException e) {
+				System.out.println("Please enter a valid input (NUMBERS ONLY)");
+				scanner.nextLine();
+				selection = Integer.MAX_VALUE;
+			}
 		}
 
 	}
@@ -193,24 +203,36 @@ public class WorkoutController {
 	 * @param scanner
 	 */
 	public static void removeExercise(Workout workout, Scanner scanner) {
-		int selection;
+		int selection = Integer.MAX_VALUE;
+		
+		if(workout.getExerciseArrayList().size() == 0) {
+			System.out.println("There are currently no loaded exercises for this workout");
+			return;
+		}
 
-		System.out.println();
-		System.out.println("**** Remove Exercise from Workout ****");
-		System.out.println(workout.printExerciseArrayList());
-		System.out.println("Please select the exercise that you wish to remove: ");
+		while (selection != Driver.RETURN_TO_MENU) {
+			System.out.println();
+			System.out.println("**** Remove Exercise from Workout ****");
+			System.out.println(workout.printExerciseArrayList());
+			System.out.println(
+					"Please select the exercise that you wish to remove or enter 0 to return to previous menu: ");
 
-		try {
-			selection = scanner.nextInt();
+			try {
+				selection = scanner.nextInt();
 
-			scanner.nextLine();
+				if (selection == Driver.RETURN_TO_MENU) {
+					return;
+				}
 
-			workout.removeExercise(workout.exerciseArrayList.remove(selection - 1));
+				scanner.nextLine();
 
-		} catch (InputMismatchException e) {
-			System.out.println("Please enter a valid input (NUMBERS ONLY)");
-			scanner.nextLine();
-			selection = Integer.MAX_VALUE;
+				workout.removeExercise(workout.exerciseArrayList.remove(selection - 1));
+
+			} catch (InputMismatchException e) {
+				System.out.println("Please enter a valid input (NUMBERS ONLY)");
+				scanner.nextLine();
+				selection = Integer.MAX_VALUE;
+			}
 		}
 
 	}
@@ -222,32 +244,46 @@ public class WorkoutController {
 	 * @param scanner
 	 */
 	public static void removeSet(Workout workout, Scanner scanner) {
-		int selection;
+		int selection = Integer.MAX_VALUE;
 		Exercise exercise;
+		
 
-		System.out.println();
-		System.out.println("**** Remove Set from Exercise ****");
-		System.out.println(workout.printExerciseArrayList());
-		System.out.print("Please select the exercise to remove the set from: ");
 
-		try {
-			selection = scanner.nextInt();
+		while (selection != Driver.RETURN_TO_MENU) {
+			System.out.println();
+			System.out.println("**** Remove Set from Exercise ****");
+			System.out.println(workout.printExerciseArrayList());
+			System.out.print("Please select the exercise to remove the set from or enter 0 to return to previous menu: ");
+			
+			if(workout.getExerciseArrayList().size() == 0) {
+				System.out.println("There are currently no loaded exercises for this workout");
+				return;
+			}
 
-			exercise = workout.exerciseArrayList.get(selection - 1);
+			try {
+				selection = scanner.nextInt();
 
-			System.out.println(exercise.printSetList());
-			System.out.print("Please select the set that you wish to remove: ");
+				if (selection == Driver.RETURN_TO_MENU) {
+					return;
+				}
+				
+				exercise = workout.exerciseArrayList.get(selection - 1);
 
-			selection = scanner.nextInt();
+				System.out.println(exercise.printSetList());
+				System.out.print("Please select the set that you wish to remove: ");
 
-			scanner.nextLine();
+				selection = scanner.nextInt();
 
-			exercise.removeSet(exercise.setList.get(selection - 1));
+				scanner.nextLine();
 
-		} catch (InputMismatchException e) {
-			System.out.println("Please enter a valid input (NUMBERS ONLY)");
-			scanner.nextLine();
-			selection = Integer.MAX_VALUE;
+				exercise.removeSet(exercise.setList.get(selection - 1));
+
+			} catch (InputMismatchException e) {
+				System.out.println("Please enter a valid input (NUMBERS ONLY)");
+				scanner.nextLine();
+				selection = Integer.MAX_VALUE;
+			}
+
 		}
 	}
 }
