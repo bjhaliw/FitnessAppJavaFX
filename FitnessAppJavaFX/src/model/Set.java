@@ -10,8 +10,8 @@ package model;
  */
 public class Set {
 
-	double reps;
-	double weight;
+	private double reps;
+	private double weight;
 
 	/**
 	 * Default constructor for the Set class

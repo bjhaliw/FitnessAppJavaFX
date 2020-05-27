@@ -14,11 +14,11 @@ import java.util.ArrayList;
 
 public class Exercise implements Comparable<Exercise> {
 
-	String exerciseName;
-	String exerciseType;
-	ArrayList<Set> setList;
-	double maxWeight, oneRepMax, totalVolume;
-	double maxReps;
+	private String exerciseName;
+	private String exerciseType;
+	private ArrayList<Set> setList;
+	private double maxWeight, oneRepMax, totalVolume;
+	private double maxReps;
 
 	/**
 	 * Constructor that creates an Exercise object to be used.

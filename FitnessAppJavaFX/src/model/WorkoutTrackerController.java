@@ -14,6 +14,13 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 
+/**
+ * This is the controller class for the WorkoutTracker object. Allows
+ * the user to access different menus to manipulate the WorkoutTracker
+ * to perform activities such as adding and deleting workouts
+ * @author bjhal
+ *
+ */
 public class WorkoutTrackerController {
 
 	public static final int MAX_WEIGHT_STATS = 1;
@@ -21,6 +28,13 @@ public class WorkoutTrackerController {
 	public static final int ONE_REP_MAX = 3;
 	public static final int TOTAL_VOLUME = 4;
 
+	/**
+	 * This is the main menu of the WorkoutTrackerController. From here, the user will
+	 * be able to access a variety of different menus to manipulate the WorkoutTracker
+	 * @param tracker
+	 * @param list
+	 * @param scanner
+	 */
 	public static void workoutTrackerOptions(WorkoutTracker tracker, ExerciseList list, Scanner scanner) {
 		int selection = Integer.MAX_VALUE;
 
@@ -129,7 +143,7 @@ public class WorkoutTrackerController {
 
 		System.out.println();
 		System.out.println("**** Past Workouts ****");
-		for (Workout current : tracker.workoutList) {
+		for (Workout current : tracker.getWorkoutList()) {
 			System.out.println(i + ": " + current.getStartTime());
 			i++;
 		}
@@ -144,14 +158,14 @@ public class WorkoutTrackerController {
 			if (selection == Driver.RETURN_TO_MENU) {
 				return null;
 			}
-			workout = tracker.workoutList.get(selection - 1);
+			workout = tracker.getWorkoutList().get(selection - 1);
 
 			System.out.println();
 			System.out.println("Workout Details from: " + workout.getStartTime().toString());
-			for (Exercise exercise : workout.exerciseArrayList) {
+			for (Exercise exercise : workout.getExerciseArrayList()) {
 				System.out.println(i + ": " + exercise);
 
-				for (Set set : exercise.setList) {
+				for (Set set : exercise.getSetList()) {
 					System.out.println("    " + j + ": " + set);
 					j++;
 				}
@@ -218,6 +232,13 @@ public class WorkoutTrackerController {
 		}
 	}
 
+	/**
+	 * This is the menu for the user to view Statistics about exercises that have been performed
+	 * and are loaded in the current WorkoutTracker.
+	 * @param tracker
+	 * @param list
+	 * @param scanner
+	 */
 	public static void viewStatisticsOptions(WorkoutTracker tracker, ExerciseList list, Scanner scanner) {
 		int selection = Integer.MAX_VALUE;
 		
@@ -256,6 +277,13 @@ public class WorkoutTrackerController {
 		}
 	}
 
+	/** 
+	 * This is a helper method designed to act as a 
+	 * @param tracker
+	 * @param list
+	 * @param scanner
+	 * @param numSelection
+	 */
 	private static void viewStatisticsAux(WorkoutTracker tracker, ExerciseList list, Scanner scanner,
 			int numSelection) {
 		int selection = 0, exerciseSelection = 0;
@@ -265,11 +293,13 @@ public class WorkoutTrackerController {
 		while (selection != 5) {
 			System.out.println();
 			System.out.println("**** View Specific Workout Statistics ****");
-			System.out.println("1. Abs Exercises\n2.Back exercises\n3. Biceps exercises\n"
-					+ "4. Cardio exercises\n5. Chest exercises\n6.Legs exercises\n7. Shoulders Exercises"
+			System.out.println("1. Abs Exercises\n2. Back exercises\n3. Biceps exercises\n"
+					+ "4. Cardio exercises\n5. Chest exercises\n6. Legs exercises\n7. Shoulders Exercises"
 					+ "\n8. Triceps exercises\n0. Back to statistics menu");
 
 			System.out.print("Please make your selection: ");
+			
+			// See about trying to cut down on code
 
 			try {
 				selection = scanner.nextInt();

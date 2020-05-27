@@ -3,8 +3,22 @@ package model;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * This class allows the user to go through the menus pertaining to the
+ * ExerciseList class. This controller allows the user to manipulate the
+ * ExerciseList object in a variety of ways, such as adding and removing
+ * an exercise.
+ * @author Brenton Haliw
+ *
+ */
 public class ExerciseListController {
 
+	/**
+	 * The main ExerciseListController method. This is the first menu that the
+	 * user will be greeted with when selecting to interact with the ExerciseList
+	 * @param list
+	 * @param scanner
+	 */
 	public static void exerciseListOptions(ExerciseList list, Scanner scanner) {
 		int selection = Integer.MAX_VALUE;
 
@@ -45,6 +59,11 @@ public class ExerciseListController {
 		}
 	}
 
+	/**
+	 * This method allows the user to view the exercises that pertains to a muscle group
+	 * @param list
+	 * @param scanner
+	 */
 	public static void viewExercisesMenu(ExerciseList list, Scanner scanner) {
 		int selection = Integer.MAX_VALUE;
 
@@ -109,6 +128,11 @@ public class ExerciseListController {
 		}
 	}
 
+	/**
+	 * This method allows the user to create a brand new exercise to be stored in the ExerciseList
+	 * @param list
+	 * @param scanner
+	 */
 	public static void createExercise(ExerciseList list, Scanner scanner) {
 		String name, type = "";
 		int selection = Integer.MAX_VALUE;
@@ -175,6 +199,11 @@ public class ExerciseListController {
 		list.addExercise(new Exercise(name, type));
 	}
 
+	/**
+	 * This method allows the user to delete an exercise from the ExerciseList
+	 * @param list
+	 * @param scanner
+	 */
 	public static void deleteExerciseFromList(ExerciseList list, Scanner scanner) {
 		int selection = Integer.MAX_VALUE;
 		int exerciseSelection = 0;

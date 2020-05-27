@@ -15,9 +15,9 @@ import java.util.ArrayList;
  */
 public class Workout implements Comparable<Workout> {
 
-	ArrayList<Exercise> exerciseArrayList;
-	LocalDateTime startTime;
-	LocalDateTime endTime;
+	private ArrayList<Exercise> exerciseArrayList;
+	private LocalDateTime startTime;
+	private LocalDateTime endTime;
 
 	/**
 	 * Default Constructor for the workout object. Initializes the exercise
@@ -60,6 +60,10 @@ public class Workout implements Comparable<Workout> {
 		this.startTime = LocalDate.of(Integer.parseInt(dateArray[0]),Integer.parseInt(dateArray[1]), 
 				Integer.parseInt(dateArray[2])).atTime(Integer.parseInt(timeArray[0]), Integer.parseInt(timeArray[1]),1);
 		
+	}
+	
+	public void setStartTime(String input) {
+		this.startTime = LocalDateTime.parse(input);
 	}
 
 	/**

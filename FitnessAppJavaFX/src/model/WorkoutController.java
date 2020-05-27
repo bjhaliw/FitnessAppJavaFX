@@ -24,6 +24,8 @@ public class WorkoutController {
 				switch (selection) {
 				case 1:
 					tracker.addWorkout(workout);
+					System.out.println("A new workout with date: " 
+							+ workout.getStartTime().toString().substring(0,10) + " added to the tracker");
 					break;
 				case 2:
 					addExercise(workout, list, scanner);
@@ -130,6 +132,8 @@ public class WorkoutController {
 				workout.addExercise(exerciseList.get(selection - 1));
 
 				System.out.println("Exercise has been successfully added");
+				
+				addSet(workout, scanner);
 
 			} catch (InputMismatchException e) {
 				System.out.println("Please enter a valid input (NUMBERS ONLY)");
@@ -170,7 +174,7 @@ public class WorkoutController {
 					return;
 				}
 
-				exercise = workout.exerciseArrayList.get(selection - 1);
+				exercise = workout.getExerciseArrayList().get(selection - 1);
 
 				System.out.print("Enter the reps done: ");
 				reps = scanner.nextInt();
@@ -226,7 +230,7 @@ public class WorkoutController {
 
 				scanner.nextLine();
 
-				workout.removeExercise(workout.exerciseArrayList.remove(selection - 1));
+				workout.removeExercise(workout.getExerciseArrayList().remove(selection - 1));
 
 			} catch (InputMismatchException e) {
 				System.out.println("Please enter a valid input (NUMBERS ONLY)");
@@ -267,7 +271,7 @@ public class WorkoutController {
 					return;
 				}
 				
-				exercise = workout.exerciseArrayList.get(selection - 1);
+				exercise = workout.getExerciseArrayList().get(selection - 1);
 
 				System.out.println(exercise.printSetList());
 				System.out.print("Please select the set that you wish to remove: ");
@@ -276,7 +280,7 @@ public class WorkoutController {
 
 				scanner.nextLine();
 
-				exercise.removeSet(exercise.setList.get(selection - 1));
+				exercise.removeSet(exercise.getSetList().get(selection - 1));
 
 			} catch (InputMismatchException e) {
 				System.out.println("Please enter a valid input (NUMBERS ONLY)");

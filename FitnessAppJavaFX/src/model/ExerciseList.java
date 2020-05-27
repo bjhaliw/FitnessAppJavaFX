@@ -23,14 +23,14 @@ import javafx.collections.ObservableList;
  */
 public class ExerciseList  {
 
-	ArrayList<Exercise> absList;
-	ArrayList<Exercise> backList;
-	ArrayList<Exercise> bicepsList;
-	ArrayList<Exercise> cardioList;
-	ArrayList<Exercise> chestList;
-	ArrayList<Exercise> legsList;
-	ArrayList<Exercise> shouldersList;
-	ArrayList<Exercise> tricepsList;
+	private ArrayList<Exercise> absList;
+	private ArrayList<Exercise> backList;
+	private ArrayList<Exercise> bicepsList;
+	private ArrayList<Exercise> cardioList;
+	private ArrayList<Exercise> chestList;
+	private ArrayList<Exercise> legsList;
+	private ArrayList<Exercise> shouldersList;
+	private ArrayList<Exercise> tricepsList;
 
 	static final int ABS = 1;
 	static final int BACK = 2;
@@ -216,28 +216,28 @@ public class ExerciseList  {
 			PrintWriter writer = new PrintWriter(fileName, "UTF-8");
 
 			writer.println("Exercise Type: Abs");
-			saveExercistListAux(writer, absList);
+			saveExerciseListAux(writer, absList);
 			
 			writer.println("\nExercise Type: Back");
-			saveExercistListAux(writer, backList);
+			saveExerciseListAux(writer, backList);
 			
 			writer.println("\nExercise Type: Biceps");
-			saveExercistListAux(writer, bicepsList);
+			saveExerciseListAux(writer, bicepsList);
 			
 			writer.println("\nExercise Type: Cardio");
-			saveExercistListAux(writer, cardioList);
+			saveExerciseListAux(writer, cardioList);
 
 			writer.println("\nExercise Type: Chest");
-			saveExercistListAux(writer, chestList);
+			saveExerciseListAux(writer, chestList);
 
 			writer.println("\nExercise Type: Legs");
-			saveExercistListAux(writer, legsList);
+			saveExerciseListAux(writer, legsList);
 
 			writer.println("\nExercise Type: Shoulders");
-			saveExercistListAux(writer, shouldersList);
+			saveExerciseListAux(writer, shouldersList);
 			
 			writer.println("\nExercise Type: Triceps");
-			saveExercistListAux(writer, tricepsList);
+			saveExerciseListAux(writer, tricepsList);
 
 			writer.close();
 
@@ -248,9 +248,9 @@ public class ExerciseList  {
 
 	}
 	
-	private void saveExercistListAux(PrintWriter writer, ArrayList<Exercise> list) {
+	private void saveExerciseListAux(PrintWriter writer, ArrayList<Exercise> list) {
 		for (Exercise exercise : list) {
-			writer.println("    " + exercise.exerciseName);
+			writer.println("    " + exercise.getExerciseName());
 		}
 	}
 
@@ -440,9 +440,9 @@ public class ExerciseList  {
 		
 		for (Exercise exercise : list) {
 			if (i == list.size()) {
-				output += i + ": " + exercise.exerciseName;
+				output += i + ": " + exercise.getExerciseName();
 			} else {
-				output += i + ": " + exercise.exerciseName + "\n";
+				output += i + ": " + exercise.getExerciseName() + "\n";
 				i++;
 			}
 		}

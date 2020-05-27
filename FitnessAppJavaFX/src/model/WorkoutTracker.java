@@ -18,8 +18,7 @@ import java.util.Scanner;
  */
 public class WorkoutTracker {
 
-	ArrayList<Workout> workoutList;
-	static boolean currentWorkoutAdded = false;
+	private ArrayList<Workout> workoutList;
 
 	/**
 	 * Default constructor for the workoutTracker class
@@ -100,10 +99,10 @@ public class WorkoutTracker {
 		PrintWriter writer = new PrintWriter(fileName, "UTF-8");
 
 		for (Workout workout : this.workoutList) {
-			writer.println("Start Time:" + workout.startTime);
-			for (Exercise exercise : workout.exerciseArrayList) {
+			writer.println("Start Time:" + workout.getStartTime());
+			for (Exercise exercise : workout.getExerciseArrayList()) {
 				writer.println("    " + exercise);
-				for (Set set : exercise.setList) {
+				for (Set set : exercise.getSetList()) {
 					writer.println("        " + set);
 				}
 			}
@@ -147,8 +146,8 @@ public class WorkoutTracker {
 				workoutNum++;
 				exerciseNum = -1;
 				current = current.substring(11);
-				this.workoutList.add(new Workout());
-				this.workoutList.get(workoutNum).startTime = LocalDateTime.parse(current);
+				this.workoutList.add(new Workout());			
+				this.workoutList.get(workoutNum).setStartTime(current);
 			}
 
 			// Checks to see if a new Exercise has been started for the workout
