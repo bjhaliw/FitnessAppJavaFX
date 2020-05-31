@@ -3,6 +3,10 @@ package model;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import controller.ExerciseListController;
+import controller.WorkoutController;
+import controller.WorkoutTrackerController;
+
 public class Driver {
 
 	public final static int RETURN_TO_MENU = 0;

@@ -32,14 +32,14 @@ public class ExerciseList  {
 	private ArrayList<Exercise> shouldersList;
 	private ArrayList<Exercise> tricepsList;
 
-	static final int ABS = 1;
-	static final int BACK = 2;
-	static final int BICEPS = 3;
-	static final int CARDIO = 4;
-	static final int CHEST = 5;
-	static final int LEGS = 6;
-	static final int SHOULDERS = 7;
-	static final int TRICEPS = 8;
+	public static final int ABS = 1;
+	public static final int BACK = 2;
+	public static final int BICEPS = 3;
+	public static final int CARDIO = 4;
+	public static final int CHEST = 5;
+	public static final int LEGS = 6;
+	public static final int SHOULDERS = 7;
+	public static final int TRICEPS = 8;
 
 	
 

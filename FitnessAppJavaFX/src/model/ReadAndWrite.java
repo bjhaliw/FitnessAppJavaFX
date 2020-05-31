@@ -55,7 +55,7 @@ import javafx.stage.Stage;
 public class ReadAndWrite extends Application {
 
 	static String directoryPath;
-	
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		DirectoryChooser chooser = new DirectoryChooser();
@@ -78,134 +78,87 @@ public class ReadAndWrite extends Application {
 				e.printStackTrace();
 			}
 		}
-		
-		Platform.exit();
-		
-	}
-	
-	public static void saveAllInformation(WorkoutTracker tracker, ExerciseList list) throws IOException {
-		Application.launch(ReadAndWrite.class);
-		
-		if (ReadAndWrite.directoryPath != null) {
-			FileOutputStream fos = new FileOutputStream(ReadAndWrite.directoryPath + "/WorkoutTracker.xlsx");
-			XSSFWorkbook workbook = new XSSFWorkbook();
-			ReadAndWrite.saveWorkoutExcel(tracker, workbook);
-			workbook.write(fos);
-			workbook.close();
-			
-			tracker.saveWorkoutList(ReadAndWrite.directoryPath + "/WorkoutList.txt");
-			list.saveExerciseList(ReadAndWrite.directoryPath + "/ExerciseList.txt");
-			Statistics.saveGraphExcel(tracker);
-			
-			
-			System.out.println("Successfully saved all information to " + ReadAndWrite.directoryPath);
-		}
-	}
 
-	/*
-	 * public static void saveWorkoutTrackerExcel(WorkoutTracker tracker, Scanner
-	 * scanner) throws IOException {
-	 * 
-	 * Platform.runLater(new Runnable() { JFXPanel panel = new JFXPanel(); // Not
-	 * sure why, but without these two the program doesn't run JFrame frame = new
-	 * JFrame();
-	 * 
-	 * @Override public void run() { DirectoryChooser chooser = new
-	 * DirectoryChooser(); chooser.setTitle("Select or create a folder"); Stage
-	 * stage = new Stage();
-	 * 
-	 * File directory = chooser.showDialog(stage);
-	 * 
-	 * if (directory == null) {
-	 * System.out.println("User backed out without selecting a directory"); return;
-	 * }
-	 * 
-	 * File filePath = new File(directory.getAbsolutePath() + "/" + "WorkoutFiles");
-	 * directoryPath = filePath.getAbsolutePath(); if (!filePath.exists()) { try {
-	 * Files.createDirectories(Paths.get(directoryPath)); } catch (IOException e) {
-	 * e.printStackTrace(); } } }
-	 * 
-	 * });
-	 * 
-	 * saveAux(tracker);
-	 * 
-	 * }
+		Platform.exit();
+
+	}
+	
+	/**
+	 * Reads the WorkkoutTracker object and creates an Excel workbook to display the information.
+	 * Information is color coordinated and workouts are separated in the Excel workbook.
+	 * @param tracker
+	 * @param workbook
 	 */
-	private static void createHeaderRow(XSSFSheet sheet, Row row, Cell cell, int dateCol, int exerciseCol, int repCol, int weightCol, CellStyle headerCellStyle) {
-		row = sheet.createRow(0);
-		cell = row.createCell(dateCol);
-		cell.setCellValue("Date");
-		cell.setCellStyle(headerCellStyle);
-		cell = row.createCell(exerciseCol);
-		cell.setCellValue("Exercise Name");
-		cell.setCellStyle(headerCellStyle);
-		cell = row.createCell(repCol);
-		cell.setCellStyle(headerCellStyle);
-		cell.setCellValue("Reps");
-		cell = row.createCell(weightCol);
-		cell.setCellStyle(headerCellStyle);
-		cell.setCellValue("Weight");
-		cell = row.createCell(weightCol + 1);
-		cell.setCellStyle(headerCellStyle);
-	}
-	
-	private static CellStyle createCellStyle(XSSFSheet sheet, short indexColor, boolean font) {
-		CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
-		Font cellStyleFont;
-		
-		if (font) {
-			cellStyleFont = sheet.getWorkbook().createFont();
-			cellStyleFont.setBold(true);
-			cellStyle.setFont(cellStyleFont);		
-		}
-		
-		cellStyle.setFillForegroundColor(indexColor); 
-		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-		cellStyle.setAlignment(HorizontalAlignment.CENTER);
-		cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-		
-		return cellStyle;
-	}
-	
-	public static void saveWorkoutExcelBetter(WorkoutTracker tracker, XSSFWorkbook workbook) {
-		int dateCol = 0, exerciseCol = 1, repCol = 2, weightCol = 3; // Will modify after in loop to other columns	
-		int rowNum = 0, exerciseNum = 1, workoutStartRowNum = 0;
-		int exerciseStartRowNum = 0;
-		int counter = 0;
+	public static void saveWorkoutExcel(WorkoutTracker tracker, XSSFWorkbook workbook) {
+		int dateCol = 0, exerciseCol = 1, repCol = 2, weightCol = 3; // Will modify after in loop to other columns
+		int rowNum = 0, exerciseNum = 1, workoutStartRowNum = 0, workoutEndRowNum = 0;
+		int exerciseStartRowNum = 0, exerciseEndRowNum = 0;
+		int counter = 1;
 		String workoutDate = "";
 		XSSFSheet sheet;
 		Row row = null;
 		Cell cell = null;
-		
-		sheet = workbook.createSheet();	
-		
-		// Creating the colors, alignment, and font if required for the cells
+
+		sheet = workbook.createSheet();
+
+		///// CREATING THE CELLSTYLES (COLORS, FONT) FOR THE EXCEL SHEET /////
 		CellStyle oddExerciseNum = createCellStyle(sheet, IndexedColors.AQUA.getIndex(), false);
 		CellStyle evenExerciseNum = createCellStyle(sheet, IndexedColors.CORAL.getIndex(), false);
-		CellStyle dateCellStyle  = createCellStyle(sheet, IndexedColors.TAN.getIndex(), false);
+		CellStyle dateCellStyle = createCellStyle(sheet, IndexedColors.TAN.getIndex(), false);
 		CellStyle headerCellStyle = createCellStyle(sheet, IndexedColors.GREY_25_PERCENT.getIndex(), true);
-		
+
 		// Row 0 - Header Row
-		createHeaderRow(sheet, row, cell, dateCol, exerciseCol, repCol, weightCol, headerCellStyle);	
+		row = sheet.createRow(0);
+		createHeaderRow(sheet, row, cell, dateCol, exerciseCol, repCol, weightCol, headerCellStyle);
 		rowNum++;
-		
+
 		for (Workout workout : tracker.getWorkoutList()) {
-			exerciseNum = 1; // Reseting exerciseNum to 1
-			workoutStartRowNum = rowNum; // Tracking to merge dateCol after
-			row = sheet.createRow(rowNum);
-			loadCellData(sheet, row, cell, dateCellStyle, dateCol, workout.getStartTime().toString().substring(0, 10), 0); // Creating date cell
+
+			if (counter % 6 == 0) {
+				sheet.autoSizeColumn(dateCol, true);
+				sheet.autoSizeColumn(exerciseCol, true);
+				sheet.autoSizeColumn(repCol, true);
+				sheet.autoSizeColumn(weightCol, true);
+				dateCol += 5;
+				exerciseCol += 5;
+				repCol += 5;
+				weightCol += 5;
+				rowNum = 1;
+				workoutStartRowNum = 0;
+				workoutEndRowNum = 0;
+				exerciseNum = 1;
+				cell = null;
+				row = null;
+				row = sheet.getRow(0);
+				createHeaderRow(sheet, row, cell, dateCol, exerciseCol, repCol, weightCol, headerCellStyle);
+			}
 			
+			///// DATE CELL /////
+			workoutStartRowNum = rowNum; // Remembering what row we started on to merge later
+			workoutDate = workout.getStartTime().toString().substring(0, 10); // YYYY-MM-DD
+			
+			if (sheet.getRow(rowNum) == null) {
+				row = sheet.createRow(rowNum++); // Creating the new Exercise Row
+			} else {
+				row = sheet.getRow(rowNum++);
+			}
+			
+			loadCellData(sheet, row, cell, dateCellStyle, dateCol, workoutDate, 0); // Loading data for date
+
 			for (Exercise exercise : workout.getExerciseArrayList()) {
-				exerciseStartRowNum = rowNum; // Tracking to merge exerciseCol after as well
-				
-				if(exerciseNum % 2 != 0) { // Loading the exercise Name cell
+
+				///// EXERCISE NAME CELL /////
+				exerciseStartRowNum = rowNum - 1;
+				exerciseEndRowNum = rowNum - 1;
+				if (exerciseNum % 2 != 0) {
 					loadCellData(sheet, row, cell, oddExerciseNum, exerciseCol, exercise.getExerciseName(), 0);
 				} else {
 					loadCellData(sheet, row, cell, evenExerciseNum, exerciseCol, exercise.getExerciseName(), 0);
 				}
-				
+
 				for (Set set : exercise.getSetList()) {
-					if(exerciseNum % 2 != 0) { // Load rep and weight cells
+					///// REP AND WEIGHT CELLS /////
+					if (exerciseNum % 2 != 0) {
 						loadCellData(sheet, row, cell, oddExerciseNum, repCol, null, set.getReps());
 						loadCellData(sheet, row, cell, oddExerciseNum, weightCol, null, set.getWeight());
 					} else {
@@ -213,194 +166,31 @@ public class ReadAndWrite extends Application {
 						loadCellData(sheet, row, cell, evenExerciseNum, weightCol, null, set.getWeight());
 					}
 					
-					
-					row = sheet.createRow(rowNum);
-					rowNum++; // Increases row for new set
-				}
-				
-				exerciseNum++; // Increases amount of exercises by 1
-				
-				// Creates a border to separate the exercise from the one below it (if applicable)
-				RegionUtil.setBorderBottom(BorderStyle.THIN, new CellRangeAddress(rowNum, rowNum, exerciseCol, weightCol) , sheet);
-				
-				// Merging the exercise name column cells together
-				
-				System.out.println(exerciseStartRowNum);
-				System.out.println(rowNum);
-				if (exerciseStartRowNum != rowNum - 1) {
-					sheet.addMergedRegion(new CellRangeAddress(exerciseStartRowNum, rowNum - 1, exerciseCol, exerciseCol));
-				}			
-			}
-			
-			// Merging the date column cells together
-			sheet.addMergedRegion(new CellRangeAddress(workoutStartRowNum, rowNum, dateCol, dateCol));
-
-			// Merging the gap in between workouts
-			rowNum++;
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(dateCol);
-			cell.setCellStyle(headerCellStyle);
-			sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, dateCol, weightCol));
-			
-			// Merging the cell to the right of the workout
-			row = sheet.getRow(workoutStartRowNum);
-			cell = row.createCell(weightCol + 1);
-			cell.setCellStyle(headerCellStyle);
-			sheet.addMergedRegion(new CellRangeAddress(workoutStartRowNum, sheet.getLastRowNum(), weightCol + 1, weightCol + 1));
-							
-			// Adding the borders to and around the workout
-			RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(rowNum, rowNum, dateCol, weightCol) , sheet);
-			RegionUtil.setBorderTop(BorderStyle.THICK, new CellRangeAddress(workoutStartRowNum, workoutStartRowNum, dateCol, weightCol) , sheet);
-			RegionUtil.setBorderLeft(BorderStyle.THICK, new CellRangeAddress(workoutStartRowNum, rowNum, dateCol, dateCol) , sheet);
-			RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(workoutStartRowNum, rowNum, dateCol, dateCol) , sheet);
-			RegionUtil.setBorderRight(BorderStyle.THICK, new CellRangeAddress(workoutStartRowNum, rowNum, weightCol, weightCol) , sheet);
-			
-			rowNum++; // Increases row for next workout			
-		}
-		
-		sheet.autoSizeColumn(dateCol, true);
-		sheet.autoSizeColumn(exerciseCol, true);
-		sheet.autoSizeColumn(repCol, true);
-		sheet.autoSizeColumn(weightCol, true);
-		
-		/*
-		 * if (counter % 5 == 0) { dateCol += 5; exerciseCol += 5; repCol += 5;
-		 * weightCol += 5;
-		 * 
-		 * rowNum = 0; }
-		 */
-	}
-	
-	private static void loadCellData(XSSFSheet sheet, Row row, Cell cell, CellStyle cellStyle, int colNum, String stringValue, double doubleValue) {	
-		cell = row.createCell(colNum);
-		
-		if (stringValue != null) {
-			cell.setCellValue(stringValue);
-		} else {
-			cell.setCellValue(doubleValue);
-		}
-		
-		cell.setCellStyle(cellStyle);
-	}
-
-	// This works really well
-	public static void saveWorkoutExcel(WorkoutTracker tracker, XSSFWorkbook workbook)  {
-		int dateCol = 0, exerciseCol = 1, repCol = 2, weightCol = 3; // Will modify after in loop to other columns	
-		int rowNum = 0, exerciseNum = 1, workoutStartRowNum = 0, workoutEndRowNum = 0;
-		int exerciseStartRowNum = 0, exerciseEndRowNum = 0;
-		int counter = 0;
-		String workoutDate = "";
-		XSSFSheet sheet;
-		Row row;
-		Cell cell;
-		
-		sheet = workbook.createSheet();	
-		
-		///// OUR COLORS FOR THE CELLS /////
-		CellStyle oddExerciseNum = sheet.getWorkbook().createCellStyle();
-		oddExerciseNum.setFillForegroundColor(IndexedColors.AQUA.getIndex()); 
-		oddExerciseNum.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-		oddExerciseNum.setAlignment(HorizontalAlignment.CENTER);
-		oddExerciseNum.setVerticalAlignment(VerticalAlignment.CENTER);
-				
-		CellStyle evenExerciseNum = sheet.getWorkbook().createCellStyle();
-		evenExerciseNum.setFillForegroundColor(IndexedColors.CORAL.getIndex()); 
-		evenExerciseNum.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-		evenExerciseNum.setAlignment(HorizontalAlignment.CENTER);
-		evenExerciseNum.setVerticalAlignment(VerticalAlignment.CENTER);
-		
-		CellStyle dateCellStyle = sheet.getWorkbook().createCellStyle();
-		dateCellStyle.setFillForegroundColor(IndexedColors.TAN.getIndex()); 
-		dateCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-		dateCellStyle.setAlignment(HorizontalAlignment.CENTER);
-		dateCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-		
-		CellStyle headerCellStyle = sheet.getWorkbook().createCellStyle();
-		headerCellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex()); 
-		headerCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-		headerCellStyle.setAlignment(HorizontalAlignment.CENTER);
-		Font font = workbook.createFont();
-		font.setBold(true);
-		headerCellStyle.setFont(font);
-		
-		///// CREATING HEADER ROW /////
-		row = sheet.createRow(rowNum++);
-		cell = row.createCell(dateCol);
-		cell.setCellValue("Date");
-		cell.setCellStyle(headerCellStyle);
-		cell = row.createCell(exerciseCol);
-		cell.setCellValue("Exercise Name");
-		cell.setCellStyle(headerCellStyle);
-		cell = row.createCell(repCol);
-		cell.setCellStyle(headerCellStyle);
-		cell.setCellValue("Reps");
-		cell = row.createCell(weightCol);
-		cell.setCellStyle(headerCellStyle);
-		cell.setCellValue("Weight");
-		cell = row.createCell(weightCol + 1);
-		cell.setCellStyle(headerCellStyle);
-
-		for (Workout workout : tracker.getWorkoutList()) {
-			
-			///// DATE CELL /////
-			workoutStartRowNum = rowNum;
-			workoutDate = workout.getStartTime().toString().substring(0, 10);
-			row = sheet.createRow(rowNum++);
-			cell = row.createCell(dateCol);
-			cell.setCellValue(workoutDate);
-			cell.setCellStyle(dateCellStyle);
-
-			for (Exercise exercise : workout.getExerciseArrayList()) {
-				
-				///// EXERCISE NAME CELL /////
-				cell = row.createCell(exerciseCol);
-				cell.setCellValue(exercise.getExerciseName());
-				exerciseStartRowNum = rowNum - 1;
-				exerciseEndRowNum = rowNum - 1;
-				
-				if (exerciseNum % 2 != 0) {
-					cell.setCellStyle(oddExerciseNum);
-				} else {
-					cell.setCellStyle(evenExerciseNum);
-				}
-
-				for (Set set : exercise.getSetList()) {
-					///// REP CELL /////
-					cell = row.createCell(repCol);
-					cell.setCellValue(set.getReps());
-					if (exerciseNum % 2 != 0) {
-						cell.setCellStyle(oddExerciseNum);
+					if (sheet.getRow(rowNum) == null) {
+						row = sheet.createRow(rowNum++); // Creating the new Exercise Row
 					} else {
-						cell.setCellStyle(evenExerciseNum);
+						row = sheet.getRow(rowNum++);
 					}
-					
-					///// WEIGHT CELL /////
-					cell = row.createCell(weightCol);
-					cell.setCellValue(set.getWeight());
-					if (exerciseNum % 2 != 0) {
-						cell.setCellStyle(oddExerciseNum);
-					} else {
-						cell.setCellStyle(evenExerciseNum);
-					}
-					row = sheet.createRow(rowNum++);		
 					
 					exerciseEndRowNum++;
 				}
-				
-				RegionUtil.setBorderBottom(BorderStyle.THIN, new CellRangeAddress(exerciseEndRowNum - 1, exerciseEndRowNum - 1, exerciseCol, weightCol) , sheet);
-				
+
+				// Adding a border to the bottom of the exercise row to help distinguish between
+				// different ones
+				RegionUtil.setBorderBottom(BorderStyle.THIN,
+						new CellRangeAddress(exerciseEndRowNum - 1, exerciseEndRowNum - 1, exerciseCol, weightCol),
+						sheet);
+
 				// Merging the exercise name column cells together
 				if (exerciseStartRowNum != exerciseEndRowNum - 1) {
-					sheet.addMergedRegion(new CellRangeAddress(exerciseStartRowNum, exerciseEndRowNum - 1, exerciseCol, exerciseCol));
+					sheet.addMergedRegion(
+							new CellRangeAddress(exerciseStartRowNum, exerciseEndRowNum - 1, exerciseCol, exerciseCol));
 				}
-				
 				exerciseNum++;
+			}
 
-				
-			}			
-			
 			workoutEndRowNum = rowNum - 2;
-			
+
 			// Merging the date column cells together
 			sheet.addMergedRegion(new CellRangeAddress(workoutStartRowNum, workoutEndRowNum, dateCol, dateCol));
 
@@ -409,30 +199,103 @@ public class ReadAndWrite extends Application {
 			cell = row.createCell(dateCol);
 			cell.setCellStyle(headerCellStyle);
 			sheet.addMergedRegion(new CellRangeAddress(rowNum - 1, rowNum - 1, dateCol, weightCol));
-			
+
 			// Merging the cell to the right of the workout
 			row = sheet.getRow(workoutStartRowNum);
 			cell = row.createCell(weightCol + 1);
 			cell.setCellStyle(headerCellStyle);
-			sheet.addMergedRegion(new CellRangeAddress(workoutStartRowNum, sheet.getLastRowNum(), weightCol + 1, weightCol + 1));
-				
-			// Adding the borders to and around the workout
-			RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(workoutEndRowNum, workoutEndRowNum, dateCol, weightCol) , sheet);
-			RegionUtil.setBorderTop(BorderStyle.THICK, new CellRangeAddress(workoutStartRowNum, workoutStartRowNum, dateCol, weightCol) , sheet);
-			RegionUtil.setBorderLeft(BorderStyle.THICK, new CellRangeAddress(workoutStartRowNum, workoutEndRowNum, dateCol, dateCol) , sheet);
-			RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(workoutStartRowNum, workoutEndRowNum, dateCol, dateCol) , sheet);
-			RegionUtil.setBorderRight(BorderStyle.THICK, new CellRangeAddress(workoutStartRowNum, workoutEndRowNum, weightCol, weightCol) , sheet);
+			sheet.addMergedRegion(
+					new CellRangeAddress(workoutStartRowNum, rowNum - 1, weightCol + 1, weightCol + 1));
 
-			exerciseNum = 1;		
-			counter++;
+			// Adding the borders to and around the workout
+			RegionUtil.setBorderBottom(BorderStyle.THICK,
+					new CellRangeAddress(workoutEndRowNum, workoutEndRowNum, dateCol, weightCol), sheet);
+			RegionUtil.setBorderTop(BorderStyle.THICK,
+					new CellRangeAddress(workoutStartRowNum, workoutStartRowNum, dateCol, weightCol), sheet);
+			RegionUtil.setBorderLeft(BorderStyle.THICK,
+					new CellRangeAddress(workoutStartRowNum, workoutEndRowNum, dateCol, dateCol), sheet);
+			RegionUtil.setBorderRight(BorderStyle.THIN,
+					new CellRangeAddress(workoutStartRowNum, workoutEndRowNum, dateCol, dateCol), sheet);
+			RegionUtil.setBorderRight(BorderStyle.THICK,
+					new CellRangeAddress(workoutStartRowNum, workoutEndRowNum, weightCol, weightCol), sheet);
+
+			exerciseNum = 1;
+			counter++; // Workout counter
 		}
-				
+		
 		sheet.autoSizeColumn(dateCol, true);
 		sheet.autoSizeColumn(exerciseCol, true);
 		sheet.autoSizeColumn(repCol, true);
 		sheet.autoSizeColumn(weightCol, true);
-
 	}
+
+	public static void saveAllInformation(WorkoutTracker tracker, ExerciseList list) throws IOException {
+		Application.launch(ReadAndWrite.class);
+
+		if (ReadAndWrite.directoryPath != null) {
+			FileOutputStream fos = new FileOutputStream(ReadAndWrite.directoryPath + "/WorkoutTracker.xlsx");
+			XSSFWorkbook workbook = new XSSFWorkbook();
+			ReadAndWrite.saveWorkoutExcel(tracker, workbook);
+			workbook.write(fos);
+			workbook.close();
+
+			tracker.saveWorkoutList(ReadAndWrite.directoryPath + "/WorkoutList.txt");
+			list.saveExerciseList(ReadAndWrite.directoryPath + "/ExerciseList.txt");
+			Statistics.saveGraphExcel(tracker);
+
+			System.out.println("Successfully saved all information to " + ReadAndWrite.directoryPath);
+		}
+	}
+
+	private static void createHeaderRow(XSSFSheet sheet, Row row, Cell cell, int dateCol, int exerciseCol, int repCol,
+			int weightCol, CellStyle headerCellStyle) {
+		cell = row.createCell(dateCol);
+		cell.setCellValue("Date");
+		cell.setCellStyle(headerCellStyle);
+		cell = row.createCell(exerciseCol);
+		cell.setCellValue("Exercise Name");
+		cell.setCellStyle(headerCellStyle);
+		cell = row.createCell(repCol);
+		cell.setCellStyle(headerCellStyle);
+		cell.setCellValue("Reps");
+		cell = row.createCell(weightCol);
+		cell.setCellStyle(headerCellStyle);
+		cell.setCellValue("Weight");
+		cell = row.createCell(weightCol + 1);
+		cell.setCellStyle(headerCellStyle);
+	}
+
+	private static CellStyle createCellStyle(XSSFSheet sheet, short indexColor, boolean font) {
+		CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
+		Font cellStyleFont;
+
+		if (font) {
+			cellStyleFont = sheet.getWorkbook().createFont();
+			cellStyleFont.setBold(true);
+			cellStyle.setFont(cellStyleFont);
+		}
+
+		cellStyle.setFillForegroundColor(indexColor);
+		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		cellStyle.setAlignment(HorizontalAlignment.CENTER);
+		cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+		return cellStyle;
+	}
+
+	private static void loadCellData(XSSFSheet sheet, Row row, Cell cell, CellStyle cellStyle, int colNum,
+			String stringValue, double doubleValue) {
+		cell = row.createCell(colNum);
+
+		if (stringValue != null) {
+			cell.setCellValue(stringValue);
+		} else {
+			cell.setCellValue(doubleValue);
+		}
+
+		cell.setCellStyle(cellStyle);
+	}
+
 	/**
 	 * This method is responsible for creating and storing the user's highest amount
 	 * of weight lifted, highest amount of reps for an exercise, one rep max
@@ -708,6 +571,5 @@ public class ReadAndWrite extends Application {
 			chart.plot(data);
 		}
 	}
-
 
 }
