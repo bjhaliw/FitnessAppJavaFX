@@ -1,0 +1,67 @@
+Exercise Type: Abs
+    Crunch
+    Hanging Knee Raise
+    Hanging Leg Raise
+    Plank
+    Russian Twists
+    Sit Up
+
+Exercise Type: Back
+    Barbell Deadlift
+    Barbell Row
+    Barbell Shrug
+    Cable Row
+    Chin Up
+    Dumbell Shrug
+    Lat Pulldown
+    Pull Up
+    Straight Arm Cable Pushdown
+    T-Bar Row
+    Trapbar Deadlift
+
+Exercise Type: Biceps
+    Barbell Curl
+    Cable Curl
+    Dumbell Curl
+    Hammer Curl
+
+Exercise Type: Cardio
+    Elliptical Trainer
+    Outside Biking
+    Outside Running
+    Outside Walking
+    Stair Stepper
+    Stationary Biking
+    Treadmill Running
+    Treadmill Walking
+
+Exercise Type: Chest
+    Flat Barbell Bench Press
+    Flat Cable Flies
+    Flat Dumbell Flies
+    High Cable Crossover
+    Incline Barbell Bench Press
+    Incline Cable Flies
+
+Exercise Type: Legs
+    Barbell Calf Raise
+    Barbell Squat
+    Cable Hip Abduction
+    Cable Hip Adduction
+    Cable Hip Thrust
+    Dumbell Lunge
+    Good Mornings
+    Romanian Deadlift
+
+Exercise Type: Shoulders
+    Cable Face Pull
+    Cable Lateral Raise
+    Dumbell Shoulder Press
+    Front Dumbell Raise
+    Lateral Dumbell Raise
+    Overhead Press
+
+Exercise Type: Triceps
+    Cable Rope Pushdown
+    Dumbell Skullcrushers
+    Overhead Cable Extension

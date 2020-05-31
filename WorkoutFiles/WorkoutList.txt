@@ -1,0 +1,119 @@
+Start Time:2020-01-09T22:45:36.834
+    Exercise name: Pull Up Exercise Type: Back
+        Reps: 9.0 Weight: 0.0
+        Reps: 5.0 Weight: 0.0
+    Exercise name: Straight Arm Cable Pushdown Exercise Type: Back
+        Reps: 11.0 Weight: 225.0
+        Reps: 10.0 Weight: 175.0
+
+Start Time:2020-01-10T22:45:36.834
+    Exercise name: Pull Up Exercise Type: Back
+        Reps: 3.0 Weight: 0.0
+        Reps: 5.0 Weight: 0.0
+    Exercise name: Straight Arm Cable Pushdown Exercise Type: Back
+        Reps: 13.0 Weight: 135.0
+
+Start Time:2020-01-11T22:45:36.834
+    Exercise name: Pull Up Exercise Type: Back
+        Reps: 9.0 Weight: 0.0
+        Reps: 5.0 Weight: 0.0
+    Exercise name: Straight Arm Cable Pushdown Exercise Type: Back
+        Reps: 6.0 Weight: 200.0
+
+Start Time:2020-01-12T22:45:36.834
+    Exercise name: Pull Up Exercise Type: Back
+        Reps: 12.0 Weight: 0.0
+        Reps: 7.0 Weight: 0.0
+    Exercise name: Straight Arm Cable Pushdown Exercise Type: Back
+        Reps: 10.0 Weight: 185.0
+        Reps: 10.0 Weight: 180.0
+        Reps: 10.0 Weight: 175.0
+
+Start Time:2020-01-13T22:45:36.834
+    Exercise name: Barbell Squat Exercise Type: Legs
+        Reps: 10.0 Weight: 65.0
+        Reps: 5.0 Weight: 115.0
+        Reps: 5.0 Weight: 155.0
+        Reps: 5.0 Weight: 115.0
+        Reps: 5.0 Weight: 165.0
+        Reps: 5.0 Weight: 165.0
+        Reps: 5.0 Weight: 165.0
+    Exercise name: Barbell Calf Raise Exercise Type: Legs
+        Reps: 15.0 Weight: 165.0
+        Reps: 15.0 Weight: 165.0
+        Reps: 15.0 Weight: 165.0
+    Exercise name: Cable Hip Thrust Exercise Type: Legs
+        Reps: 12.0 Weight: 125.0
+        Reps: 12.0 Weight: 125.0
+        Reps: 12.0 Weight: 125.0
+    Exercise name: Cable Hip Abbduction Exercise Type: Legs
+        Reps: 12.0 Weight: 20.0
+        Reps: 12.0 Weight: 20.0
+        Reps: 12.0 Weight: 20.0
+
+Start Time:2020-01-17T22:45:36.834
+    Exercise name: Barbell Squat Exercise Type: Legs
+        Reps: 10.0 Weight: 65.0
+        Reps: 10.0 Weight: 125.0
+        Reps: 5.0 Weight: 155.0
+        Reps: 5.0 Weight: 115.0
+        Reps: 5.0 Weight: 170.0
+        Reps: 5.0 Weight: 175.0
+        Reps: 2.0 Weight: 185.0
+    Exercise name: Barbell Calf Raise Exercise Type: Legs
+        Reps: 15.0 Weight: 175.0
+        Reps: 12.0 Weight: 175.0
+        Reps: 15.0 Weight: 175.0
+    Exercise name: Cable Hip Thrust Exercise Type: Legs
+        Reps: 10.0 Weight: 120.0
+        Reps: 10.0 Weight: 120.0
+        Reps: 10.0 Weight: 115.0
+    Exercise name: Cable Hip Abbduction Exercise Type: Legs
+        Reps: 10.0 Weight: 25.0
+        Reps: 10.0 Weight: 25.0
+        Reps: 10.0 Weight: 25.0
+
+Start Time:2020-01-18T22:45:36.834
+    Exercise name: Barbell Squat Exercise Type: Legs
+        Reps: 10.0 Weight: 85.0
+        Reps: 10.0 Weight: 125.0
+        Reps: 10.0 Weight: 175.0
+        Reps: 10.0 Weight: 115.0
+    Exercise name: Barbell Calf Raise Exercise Type: Legs
+        Reps: 10.0 Weight: 185.0
+        Reps: 10.0 Weight: 185.0
+        Reps: 10.0 Weight: 185.0
+    Exercise name: Cable Hip Thrust Exercise Type: Legs
+        Reps: 10.0 Weight: 130.0
+        Reps: 10.0 Weight: 130.0
+        Reps: 10.0 Weight: 130.0
+    Exercise name: Cable Hip Abbduction Exercise Type: Legs
+        Reps: 10.0 Weight: 30.0
+        Reps: 10.0 Weight: 30.0
+        Reps: 10.0 Weight: 30.0
+
+Start Time:2020-01-19T22:45:36.834
+    Exercise name: Barbell Squat Exercise Type: Legs
+        Reps: 5.0 Weight: 100.0
+        Reps: 5.0 Weight: 125.0
+        Reps: 5.0 Weight: 155.0
+        Reps: 2.0 Weight: 200.0
+    Exercise name: Barbell Calf Raise Exercise Type: Legs
+        Reps: 9.0 Weight: 200.0
+        Reps: 7.0 Weight: 200.0
+        Reps: 8.0 Weight: 200.0
+    Exercise name: Cable Hip Thrust Exercise Type: Legs
+        Reps: 10.0 Weight: 115.0
+        Reps: 10.0 Weight: 115.0
+        Reps: 11.0 Weight: 115.0
+    Exercise name: Cable Hip Abbduction Exercise Type: Legs
+        Reps: 8.0 Weight: 15.0
+        Reps: 3.0 Weight: 15.0
+        Reps: 5.0 Weight: 15.0
+
+Start Time:2020-05-30T22:12:46.284
+    Exercise name: Overhead Press Exercise Type: Shoulders
+        Reps: 10.0 Weight: 50.0
+        Reps: 10.0 Weight: 50.0
+        Reps: 10.0 Weight: 50.0
+
