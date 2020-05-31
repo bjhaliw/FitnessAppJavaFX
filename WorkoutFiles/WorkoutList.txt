@@ -46,7 +46,7 @@ Start Time:2020-01-13T22:45:36.834
         Reps: 12.0 Weight: 125.0
         Reps: 12.0 Weight: 125.0
         Reps: 12.0 Weight: 125.0
-    Exercise name: Cable Hip Abbduction Exercise Type: Legs
+    Exercise name: Cable Hip Abduction Exercise Type: Legs
         Reps: 12.0 Weight: 20.0
         Reps: 12.0 Weight: 20.0
         Reps: 12.0 Weight: 20.0
@@ -68,7 +68,7 @@ Start Time:2020-01-17T22:45:36.834
         Reps: 10.0 Weight: 120.0
         Reps: 10.0 Weight: 120.0
         Reps: 10.0 Weight: 115.0
-    Exercise name: Cable Hip Abbduction Exercise Type: Legs
+    Exercise name: Cable Hip Abduction Exercise Type: Legs
         Reps: 10.0 Weight: 25.0
         Reps: 10.0 Weight: 25.0
         Reps: 10.0 Weight: 25.0
@@ -87,7 +87,7 @@ Start Time:2020-01-18T22:45:36.834
         Reps: 10.0 Weight: 130.0
         Reps: 10.0 Weight: 130.0
         Reps: 10.0 Weight: 130.0
-    Exercise name: Cable Hip Abbduction Exercise Type: Legs
+    Exercise name: Cable Hip Abduction Exercise Type: Legs
         Reps: 10.0 Weight: 30.0
         Reps: 10.0 Weight: 30.0
         Reps: 10.0 Weight: 30.0
@@ -106,7 +106,7 @@ Start Time:2020-01-19T22:45:36.834
         Reps: 10.0 Weight: 115.0
         Reps: 10.0 Weight: 115.0
         Reps: 11.0 Weight: 115.0
-    Exercise name: Cable Hip Abbduction Exercise Type: Legs
+    Exercise name: Cable Hip Abduction Exercise Type: Legs
         Reps: 8.0 Weight: 15.0
         Reps: 3.0 Weight: 15.0
         Reps: 5.0 Weight: 15.0
