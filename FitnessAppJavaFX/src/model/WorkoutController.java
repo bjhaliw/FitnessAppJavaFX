@@ -110,13 +110,13 @@ public class WorkoutController {
 					exerciseList = list.getChestList();
 					break;
 				case ExerciseList.LEGS:
-					exerciseList = list.getAbsList();
+					exerciseList = list.getLegsList();
 					break;
 				case ExerciseList.SHOULDERS:
 					exerciseList = list.getShouldersList();
 					break;
 				case ExerciseList.TRICEPS:
-					exerciseList = list.getAbsList();
+					exerciseList = list.getTricepsList();
 					break;
 				default:
 					System.out.println("Please select a valid number");
