@@ -8,17 +8,18 @@ Fitness App with JavaFX GUI
 - Workout Tracker
   - Read and Write capabilities to create and save workouts
   - Edit past workouts to add/remove entire workouts, exercises, and sets
-  - View statistics such as max weight, reps, volume, one rep max for an exercise.
+  - View statistics such as max weight, reps, volume, one rep max for an exercise
+  - View JavaFX graphs to see these statistics as well
 - Exercise List
   - Read and Write capabilities to create and save selectable exercises
-  - Manipulate exercise list to add/remove/edit exercises to be performed.
+  - Manipulate exercise list to add/remove/edit exercises to be performed
 
 2. In-Work Features:
-- Create Microsoft Excel spreadsheets to view statistical information
-  - Utilizes JFileChooser to select/create the Excel document.
-  - Excel sheets are able to display all the graphs and correct data. Need to cut down duplicate code.
-- View JavaFX graphs for statistics
-  - Need to tidy up code. Possibly save JavaFX graphs to desktop as well?
+- Create Microsoft Excel spreadsheets to view historical information through Apache POI 4.1.2
+  - Currently utilizes JavaFX DirectoryChooser to select/create the directory
+  - Excel sheets are able to display all the graphs and correct data. Need to cut down duplicate code
+  - Excel sheets containing past workouts are also able to be created. Currently only a single column but will eventually cover the applicable sheet
+  - Need to figure out how many Excel sheets/documents are required so the user doesn't have large amounts of them
 
 3. Future Features:
 - Support Web Application Framework to be used in realtime online.
