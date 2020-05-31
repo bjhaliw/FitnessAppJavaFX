@@ -1,22 +1,15 @@
 package model;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Date;
-import java.util.Optional;
 import java.util.Scanner;
-
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
-
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -27,7 +20,6 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xddf.usermodel.chart.AxisPosition;
 import org.apache.poi.xddf.usermodel.chart.ChartTypes;
@@ -40,22 +32,14 @@ import org.apache.poi.xddf.usermodel.chart.XDDFDataSourcesFactory;
 import org.apache.poi.xddf.usermodel.chart.XDDFLineChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFNumericalDataSource;
 import org.apache.poi.xddf.usermodel.chart.XDDFValueAxis;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFChart;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
-import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFDrawing;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Alert.AlertType;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
@@ -76,6 +60,7 @@ public class ReadAndWrite extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		DirectoryChooser chooser = new DirectoryChooser();
 		chooser.setTitle("Select or create a folder");
+		primaryStage.setAlwaysOnTop(true);
 
 		File directory = chooser.showDialog(primaryStage);
 
@@ -96,6 +81,25 @@ public class ReadAndWrite extends Application {
 		
 		Platform.exit();
 		
+	}
+	
+	public static void saveAllInformation(WorkoutTracker tracker, ExerciseList list) throws IOException {
+		Application.launch(ReadAndWrite.class);
+		
+		if (ReadAndWrite.directoryPath != null) {
+			FileOutputStream fos = new FileOutputStream(ReadAndWrite.directoryPath + "/WorkoutTracker.xlsx");
+			XSSFWorkbook workbook = new XSSFWorkbook();
+			ReadAndWrite.saveWorkoutExcel(tracker, workbook);
+			workbook.write(fos);
+			workbook.close();
+			
+			tracker.saveWorkoutList(ReadAndWrite.directoryPath + "/WorkoutList.txt");
+			list.saveExerciseList(ReadAndWrite.directoryPath + "/ExerciseList.txt");
+			Statistics.saveGraphExcel(tracker);
+			
+			
+			System.out.println("Successfully saved all information to " + ReadAndWrite.directoryPath);
+		}
 	}
 
 	/*

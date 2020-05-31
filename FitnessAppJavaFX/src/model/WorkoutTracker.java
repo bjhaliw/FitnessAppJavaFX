@@ -58,7 +58,8 @@ public class WorkoutTracker {
 		boolean result = this.workoutList.add(workout);
 
 		if (result) {
-			System.out.println("Workout has been added to the tracker");
+			System.out.println("A new workout with date: " 
+					+ workout.getStartTime().toString().substring(0,10) + " added to the tracker");
 		} else {
 			System.out.println("Adding workout to tracker has failed");
 		}

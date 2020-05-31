@@ -26,21 +26,7 @@ public class DriverWriter {
 		ReadAndWrite.saveWorkoutExcel(tracker, workbook);
 		workbook.write(fos);
 		System.out.println("Success!");
-		
-		Platform.runLater(new Runnable() {
 
-			JFXPanel panel = new JFXPanel();
-			JFrame frame = new JFrame();
-			
-			@Override
-			public void run() {
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.showAndWait();
-				
-			}
-			
-		});
-		
 		workbook.close();
 	}
 }

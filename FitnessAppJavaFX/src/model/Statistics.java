@@ -51,7 +51,7 @@ public class Statistics {
 	 * @param tracker
 	 * @throws IOException
 	 */
-	public static void saveGraphExcel(WorkoutTracker tracker, Scanner scanner) throws IOException {
+	public static void saveGraphExcel(WorkoutTracker tracker) throws IOException {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 
 		////// WRITING THE VALUES ///////
@@ -59,71 +59,58 @@ public class Statistics {
 
 		////// CREATING THE GRAPHS ///////
 		createGraphs(workbook);
-
-		////// SAVING THE INFORMATION ///////
-		final JFileChooser fc = new JFileChooser();
-		JFrame jf = new JFrame();
-		jf.setAlwaysOnTop(true);
-		File excelFile = null;
-		FileOutputStream fileOut = null;
-
-		fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		fc.setDialogTitle("Save File");
-		fc.setCurrentDirectory(new File(System.getProperties().getProperty("user.home") + "\\Desktop"));
-
-		// Allows us to only see directories and files ending with .xlsx
-		fc.setFileFilter(new FileFilter() {
-			public boolean accept(final File f) {
-				return f.isDirectory() || f.getAbsolutePath().endsWith(".xlsx");
-			}
-
-			public String getDescription() {
-				return "Excel files (*.xlsx)";
-			}
-		});
-
-		// Prompts the user to select or type in a file
-		int returnVal = fc.showSaveDialog(jf);
-
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-
-			excelFile = fc.getSelectedFile();
-
-			// If the user wants to create a brand new file
-			if (!excelFile.exists()) {
-				fileOut = new FileOutputStream(excelFile + ".xlsx");
-
-				// If the user selected a previous .xlsx file
-			} else {
-				int res = JOptionPane.showConfirmDialog(jf, "File already exists. Do you wish to overwrite?");
-
-				if (res == JOptionPane.YES_OPTION) {
-					fileOut = new FileOutputStream(excelFile);
-
-				} else if (res == JOptionPane.NO_OPTION) {
-					int returnVal2 = fc.showSaveDialog(jf);
-					if (returnVal2 == JFileChooser.APPROVE_OPTION) {
-
-						File file2 = fc.getSelectedFile();
-						if (!file2.exists()) {
-							fileOut = new FileOutputStream(file2 + ".xlsx");
-						}
-					}
-				} else if (res == JOptionPane.CANCEL_OPTION) {
-					JOptionPane.showMessageDialog(jf, "User cancelled operation.");
-				}
-			}
-
-			if (fileOut != null) {
-				workbook.write(fileOut);
-				fileOut.close();
-				System.out.println("\n Your Excel file has been generated!");
-				JOptionPane.showMessageDialog(jf, "File Created.");
-				workbook.close();
-			}
-		} else if (returnVal == JOptionPane.CANCEL_OPTION) {
-			JOptionPane.showMessageDialog(jf, "User cancelled operation.");
-		}
+		
+		FileOutputStream fos = new FileOutputStream(ReadAndWrite.directoryPath + "/ExerciseStatistics.xlsx");
+		workbook.write(fos);
+		workbook.close();
+		
+		/*
+		 * ////// SAVING THE INFORMATION /////// final JFileChooser fc = new
+		 * JFileChooser(); JFrame jf = new JFrame(); jf.setAlwaysOnTop(true); File
+		 * excelFile = null; FileOutputStream fileOut = null;
+		 * 
+		 * fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		 * fc.setDialogTitle("Save File"); fc.setCurrentDirectory(new
+		 * File(System.getProperties().getProperty("user.home") + "\\Desktop"));
+		 * 
+		 * // Allows us to only see directories and files ending with .xlsx
+		 * fc.setFileFilter(new FileFilter() { public boolean accept(final File f) {
+		 * return f.isDirectory() || f.getAbsolutePath().endsWith(".xlsx"); }
+		 * 
+		 * public String getDescription() { return "Excel files (*.xlsx)"; } });
+		 * 
+		 * // Prompts the user to select or type in a file int returnVal =
+		 * fc.showSaveDialog(jf);
+		 * 
+		 * if (returnVal == JFileChooser.APPROVE_OPTION) {
+		 * 
+		 * excelFile = fc.getSelectedFile();
+		 * 
+		 * // If the user wants to create a brand new file if (!excelFile.exists()) {
+		 * fileOut = new FileOutputStream(excelFile + ".xlsx");
+		 * 
+		 * // If the user selected a previous .xlsx file } else { int res =
+		 * JOptionPane.showConfirmDialog(jf,
+		 * "File already exists. Do you wish to overwrite?");
+		 * 
+		 * if (res == JOptionPane.YES_OPTION) { fileOut = new
+		 * FileOutputStream(excelFile);
+		 * 
+		 * } else if (res == JOptionPane.NO_OPTION) { int returnVal2 =
+		 * fc.showSaveDialog(jf); if (returnVal2 == JFileChooser.APPROVE_OPTION) {
+		 * 
+		 * File file2 = fc.getSelectedFile(); if (!file2.exists()) { fileOut = new
+		 * FileOutputStream(file2 + ".xlsx"); } } } else if (res ==
+		 * JOptionPane.CANCEL_OPTION) { JOptionPane.showMessageDialog(jf,
+		 * "User cancelled operation."); } }
+		 * 
+		 * if (fileOut != null) { workbook.write(fileOut); fileOut.close();
+		 * System.out.println("\n Your Excel file has been generated!");
+		 * JOptionPane.showMessageDialog(jf, "File Created."); workbook.close(); } }
+		 * else if (returnVal == JOptionPane.CANCEL_OPTION) {
+		 * JOptionPane.showMessageDialog(jf, "User cancelled operation."); }
+		 */
+		 
 	}
 
 	/**

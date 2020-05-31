@@ -1,12 +1,18 @@
 package model;
 
 import java.awt.Dimension;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import javafx.application.Application;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
@@ -43,7 +49,7 @@ public class WorkoutTrackerController {
 			System.out.println("**** Workout Tracker Menu ****");
 			System.out.println(
 					"1. View past workouts\n2. Edit a past workout\n" + "3. View statistics\n"
-							+ "4. Add past workout\n0. Return to main menu");
+							+ "4. Add past workout\n5. Save all information\n0. Return to main menu");
 			System.out.print("Enter your selection: ");
 
 			try {
@@ -61,6 +67,13 @@ public class WorkoutTrackerController {
 					break;
 				case 4:
 					addPastWorkout(tracker, list, scanner);
+					break;
+				case 5:
+					try {
+						ReadAndWrite.saveAllInformation(tracker, list);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 					break;
 				case Driver.RETURN_TO_MENU:
 					System.out.println("Returning to main menu");
@@ -261,7 +274,7 @@ public class WorkoutTrackerController {
 					viewStatisticsAux(tracker, list, scanner, selection);
 				} else if (selection == 5){
 					try {
-						Statistics.saveGraphExcel(tracker, scanner);
+						Statistics.saveGraphExcel(tracker);
 					} catch (IOException e) {
 						System.out.println("Writing to Excel Document Failed");
 						e.printStackTrace();
@@ -345,7 +358,7 @@ public class WorkoutTrackerController {
 					System.out.println(list.printExerciseList(ExerciseList.SHOULDERS));
 					System.out.print("Select exercise: ");
 					exerciseSelection = scanner.nextInt();
-					name = list.getChestExercises().get(exerciseSelection - 1).getExerciseName();
+					name = list.getShouldersExercises().get(exerciseSelection - 1).getExerciseName();
 					break;				
 				case 8:
 					System.out.println(list.printExerciseList(ExerciseList.TRICEPS));

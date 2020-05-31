@@ -24,8 +24,6 @@ public class WorkoutController {
 				switch (selection) {
 				case 1:
 					tracker.addWorkout(workout);
-					System.out.println("A new workout with date: " 
-							+ workout.getStartTime().toString().substring(0,10) + " added to the tracker");
 					break;
 				case 2:
 					addExercise(workout, list, scanner);

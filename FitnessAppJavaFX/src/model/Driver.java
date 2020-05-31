@@ -20,7 +20,7 @@ public class Driver {
 		/*
 		 * final JFileChooser fc = new JFileChooser(); File exerciseListFile = null,
 		 * workoutTrackerFile = null;
-		 * 
+		 * 1
 		 * JOptionPane.showMessageDialog(null, "Please select your exercise list");
 		 * 
 		 * int returnVal = fc.showOpenDialog(null); if (returnVal ==
