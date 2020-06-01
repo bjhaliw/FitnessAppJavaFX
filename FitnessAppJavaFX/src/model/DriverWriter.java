@@ -20,13 +20,13 @@ public class DriverWriter {
 		WorkoutTracker tracker = new WorkoutTracker();
 		tracker.loadWorkoutList("C:\\Users\\bjhal\\Desktop\\WorkoutList.txt");
 		Application.launch(ReadAndWrite.class, args);
-
 		FileOutputStream fos = new FileOutputStream(ReadAndWrite.directoryPath + "/WorkoutTracker.xlsx");
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		ReadAndWrite.saveWorkoutExcel(tracker, workbook);
 		workbook.write(fos);
 		System.out.println("Success!");
 
+		fos.close();
 		workbook.close();
 	}
 }

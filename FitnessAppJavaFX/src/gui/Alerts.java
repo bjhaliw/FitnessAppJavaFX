@@ -49,4 +49,23 @@ public class Alerts {
 
 		return alert;
 	}
+	
+	protected Alert directoryPathNotFound() {
+		Alert alert = new Alert(AlertType.INFORMATION, "Unable to find the directory containing the workout files"
+				+ "\nPlease select the directory containing the files, or create a new directory.", ButtonType.OK,
+				ButtonType.CANCEL);
+		alert.setTitle("No Directory Path");
+		alert.setHeaderText("Unable to locate Fitness Tracker directory");
+		Optional<ButtonType> result = alert.showAndWait();
+
+		if (result.get() == ButtonType.CANCEL) {			
+			 alert = new Alert(AlertType.INFORMATION, "Unable to start program. Please select a directory.");
+			 alert.setTitle("Closing Program");
+			 alert.setHeaderText("Directory Required");
+			 alert.showAndWait();
+			System.exit(0);
+		}
+
+		return alert;
+	}
 }

@@ -494,7 +494,7 @@ public class WorkoutTrackerController {
 	 * JavaFX. At this step, it is assumed that there is at least one entry to add
 	 * to the graph.
 	 * 
-	 * @param name
+	 * @param name - Exercise Name
 	 * @return
 	 */
 	private static LineChart<String, Number> createGraph(WorkoutTracker tracker, String name, int selection) {
