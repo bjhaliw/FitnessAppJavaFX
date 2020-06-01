@@ -82,18 +82,75 @@ public class ReadAndWrite extends Application {
 		Platform.exit();
 
 	}
-	
-	/**
-	 * Reads the WorkkoutTracker object and creates an Excel workbook to display the information.
-	 * Information is color coordinated and workouts are separated in the Excel workbook.
-	 * @param tracker
-	 * @param workbook
-	 */
+
+	public static void fillInExtraRows(XSSFWorkbook workbook, CellStyle style, int sheetWidth) {
+		Row row;
+		Cell cell;
+		XSSFSheet sheet;
+		boolean continueLoop = true;
+		int firstCol = 0, lastCol = 3, currentRow = 1;
+		int rowNumStart = 0;
+		int counter = 0;
+		System.out.println(sheetWidth);
+
+		for (int sheetNum = 0; sheetNum < workbook.getNumberOfSheets(); sheetNum++) {
+
+			sheet = workbook.getSheetAt(sheetNum);
+
+			// Looking for open rows
+			for (; currentRow < sheet.getLastRowNum(); currentRow++) {
+				row = sheet.getRow(currentRow);
+
+				cell = row.getCell(lastCol);
+				if (cell == null && rowNumStart == 0) { // First identify empty row
+					loadCellData(sheet, row, cell, style, firstCol, "", 0);
+					rowNumStart = currentRow;
+				} else if (cell != null && rowNumStart != 0) { // Line Between Workouts gets merged and filled
+					System.out.println("Merging Row Num : " + rowNumStart + " and Last row: " + (currentRow - 1));
+					sheet.addMergedRegion(new CellRangeAddress(rowNumStart, currentRow - 1, firstCol, lastCol));
+					rowNumStart = 0;
+				} else if (currentRow + 1 == sheet.getLastRowNum()) { // Empty space after last workout
+					// Already at the end
+					if (rowNumStart == 0) {
+						rowNumStart = sheet.getLastRowNum();
+						row = sheet.getRow(sheet.getLastRowNum());
+					}
+
+					System.out.println("Merging Row Num : " + rowNumStart + " and Last row: " + sheet.getLastRowNum());
+					loadCellData(sheet, row, cell, style, firstCol, "", 0);
+					sheet.addMergedRegion(new CellRangeAddress(rowNumStart, sheet.getLastRowNum(), firstCol, lastCol));
+					counter++;
+
+					if (counter < sheetWidth) {
+						firstCol += 5;
+						lastCol += 5;
+						currentRow = 1;
+						rowNumStart = 0;
+					}
+				}
+			}
+
+			lastCol = 3; // Reseting value
+
+			while (continueLoop) {
+				row = sheet.getRow(0);
+				cell = row.getCell(lastCol + 1);
+				if (cell == null) {
+					System.out.println("Breaking while loop");
+					continueLoop = false;
+				} else {
+					sheet.addMergedRegion(new CellRangeAddress(0, sheet.getLastRowNum(), lastCol + 1, lastCol + 1));
+					lastCol += 5;
+				}
+			}
+		}
+	}
+
 	public static void saveWorkoutExcel(WorkoutTracker tracker, XSSFWorkbook workbook) {
 		int dateCol = 0, exerciseCol = 1, repCol = 2, weightCol = 3; // Will modify after in loop to other columns
 		int rowNum = 0, exerciseNum = 1, workoutStartRowNum = 0, workoutEndRowNum = 0;
 		int exerciseStartRowNum = 0, exerciseEndRowNum = 0;
-		int counter = 1;
+		int counter = 1, numColumnsTotal = 1;
 		String workoutDate = "";
 		XSSFSheet sheet;
 		Row row = null;
@@ -130,19 +187,21 @@ public class ReadAndWrite extends Application {
 				cell = null;
 				row = null;
 				row = sheet.getRow(0);
+				numColumnsTotal++;
+				counter = 1;
 				createHeaderRow(sheet, row, cell, dateCol, exerciseCol, repCol, weightCol, headerCellStyle);
 			}
-			
+
 			///// DATE CELL /////
 			workoutStartRowNum = rowNum; // Remembering what row we started on to merge later
 			workoutDate = workout.getStartTime().toString().substring(0, 10); // YYYY-MM-DD
-			
+
 			if (sheet.getRow(rowNum) == null) {
 				row = sheet.createRow(rowNum++); // Creating the new Exercise Row
 			} else {
 				row = sheet.getRow(rowNum++);
 			}
-			
+
 			loadCellData(sheet, row, cell, dateCellStyle, dateCol, workoutDate, 0); // Loading data for date
 
 			for (Exercise exercise : workout.getExerciseArrayList()) {
@@ -165,13 +224,13 @@ public class ReadAndWrite extends Application {
 						loadCellData(sheet, row, cell, evenExerciseNum, repCol, null, set.getReps());
 						loadCellData(sheet, row, cell, evenExerciseNum, weightCol, null, set.getWeight());
 					}
-					
+
 					if (sheet.getRow(rowNum) == null) {
 						row = sheet.createRow(rowNum++); // Creating the new Exercise Row
 					} else {
 						row = sheet.getRow(rowNum++);
 					}
-					
+
 					exerciseEndRowNum++;
 				}
 
@@ -194,19 +253,6 @@ public class ReadAndWrite extends Application {
 			// Merging the date column cells together
 			sheet.addMergedRegion(new CellRangeAddress(workoutStartRowNum, workoutEndRowNum, dateCol, dateCol));
 
-			// Merging the gap in between workouts
-			row = sheet.getRow(rowNum - 1);
-			cell = row.createCell(dateCol);
-			cell.setCellStyle(headerCellStyle);
-			sheet.addMergedRegion(new CellRangeAddress(rowNum - 1, rowNum - 1, dateCol, weightCol));
-
-			// Merging the cell to the right of the workout
-			row = sheet.getRow(workoutStartRowNum);
-			cell = row.createCell(weightCol + 1);
-			cell.setCellStyle(headerCellStyle);
-			sheet.addMergedRegion(
-					new CellRangeAddress(workoutStartRowNum, rowNum - 1, weightCol + 1, weightCol + 1));
-
 			// Adding the borders to and around the workout
 			RegionUtil.setBorderBottom(BorderStyle.THICK,
 					new CellRangeAddress(workoutEndRowNum, workoutEndRowNum, dateCol, weightCol), sheet);
@@ -222,12 +268,147 @@ public class ReadAndWrite extends Application {
 			exerciseNum = 1;
 			counter++; // Workout counter
 		}
-		
+
+		// Autosizing the last columns
 		sheet.autoSizeColumn(dateCol, true);
 		sheet.autoSizeColumn(exerciseCol, true);
 		sheet.autoSizeColumn(repCol, true);
 		sheet.autoSizeColumn(weightCol, true);
+
+		fillInExtraRows(workbook, headerCellStyle, numColumnsTotal);
 	}
+
+	/*	*//**
+			 * Reads the WorkkoutTracker object and creates an Excel workbook to display the
+			 * information. Information is color coordinated and workouts are separated in
+			 * the Excel workbook.
+			 * 
+			 * @param tracker
+			 * @param workbook
+			 *//*
+				 * public static void saveWorkoutExcel(WorkoutTracker tracker, XSSFWorkbook
+				 * workbook) { int dateCol = 0, exerciseCol = 1, repCol = 2, weightCol = 3; //
+				 * Will modify after in loop to other columns int rowNum = 0, exerciseNum = 1,
+				 * workoutStartRowNum = 0, workoutEndRowNum = 0; int exerciseStartRowNum = 0,
+				 * exerciseEndRowNum = 0; int counter = 1; String workoutDate = ""; XSSFSheet
+				 * sheet; Row row = null; Cell cell = null;
+				 * 
+				 * sheet = workbook.createSheet();
+				 * 
+				 * ///// CREATING THE CELLSTYLES (COLORS, FONT) FOR THE EXCEL SHEET /////
+				 * CellStyle oddExerciseNum = createCellStyle(sheet,
+				 * IndexedColors.AQUA.getIndex(), false); CellStyle evenExerciseNum =
+				 * createCellStyle(sheet, IndexedColors.CORAL.getIndex(), false); CellStyle
+				 * dateCellStyle = createCellStyle(sheet, IndexedColors.TAN.getIndex(), false);
+				 * CellStyle headerCellStyle = createCellStyle(sheet,
+				 * IndexedColors.GREY_25_PERCENT.getIndex(), true);
+				 * 
+				 * // Row 0 - Header Row row = sheet.createRow(0); createHeaderRow(sheet, row,
+				 * cell, dateCol, exerciseCol, repCol, weightCol, headerCellStyle); rowNum++;
+				 * 
+				 * for (Workout workout : tracker.getWorkoutList()) {
+				 * 
+				 * if (counter % 6 == 0) { sheet.autoSizeColumn(dateCol, true);
+				 * sheet.autoSizeColumn(exerciseCol, true); sheet.autoSizeColumn(repCol, true);
+				 * sheet.autoSizeColumn(weightCol, true); dateCol += 5; exerciseCol += 5; repCol
+				 * += 5; weightCol += 5; rowNum = 1; workoutStartRowNum = 0; workoutEndRowNum =
+				 * 0; exerciseNum = 1; cell = null; row = null; row = sheet.getRow(0);
+				 * createHeaderRow(sheet, row, cell, dateCol, exerciseCol, repCol, weightCol,
+				 * headerCellStyle); }
+				 * 
+				 * ///// DATE CELL ///// workoutStartRowNum = rowNum; // Remembering what row we
+				 * started on to merge later workoutDate =
+				 * workout.getStartTime().toString().substring(0, 10); // YYYY-MM-DD
+				 * 
+				 * if (sheet.getRow(rowNum) == null) { row = sheet.createRow(rowNum++); //
+				 * Creating the new Exercise Row } else { row = sheet.getRow(rowNum++); }
+				 * 
+				 * loadCellData(sheet, row, cell, dateCellStyle, dateCol, workoutDate, 0); //
+				 * Loading data for date
+				 * 
+				 * for (Exercise exercise : workout.getExerciseArrayList()) {
+				 * 
+				 * ///// EXERCISE NAME CELL ///// exerciseStartRowNum = rowNum - 1;
+				 * exerciseEndRowNum = rowNum - 1; if (exerciseNum % 2 != 0) {
+				 * loadCellData(sheet, row, cell, oddExerciseNum, exerciseCol,
+				 * exercise.getExerciseName(), 0); } else { loadCellData(sheet, row, cell,
+				 * evenExerciseNum, exerciseCol, exercise.getExerciseName(), 0); }
+				 * 
+				 * for (Set set : exercise.getSetList()) { ///// REP AND WEIGHT CELLS ///// if
+				 * (exerciseNum % 2 != 0) { loadCellData(sheet, row, cell, oddExerciseNum,
+				 * repCol, null, set.getReps()); loadCellData(sheet, row, cell, oddExerciseNum,
+				 * weightCol, null, set.getWeight()); } else { loadCellData(sheet, row, cell,
+				 * evenExerciseNum, repCol, null, set.getReps()); loadCellData(sheet, row, cell,
+				 * evenExerciseNum, weightCol, null, set.getWeight()); }
+				 * 
+				 * if (sheet.getRow(rowNum) == null) { row = sheet.createRow(rowNum++); //
+				 * Creating the new Exercise Row } else { row = sheet.getRow(rowNum++); }
+				 * 
+				 * exerciseEndRowNum++; }
+				 * 
+				 * // Adding a border to the bottom of the exercise row to help distinguish
+				 * between // different ones RegionUtil.setBorderBottom(BorderStyle.THIN, new
+				 * CellRangeAddress(exerciseEndRowNum - 1, exerciseEndRowNum - 1, exerciseCol,
+				 * weightCol), sheet);
+				 * 
+				 * // Merging the exercise name column cells together if (exerciseStartRowNum !=
+				 * exerciseEndRowNum - 1) { sheet.addMergedRegion( new
+				 * CellRangeAddress(exerciseStartRowNum, exerciseEndRowNum - 1, exerciseCol,
+				 * exerciseCol)); } exerciseNum++; }
+				 * 
+				 * workoutEndRowNum = rowNum - 2;
+				 * 
+				 * // Merging the date column cells together sheet.addMergedRegion(new
+				 * CellRangeAddress(workoutStartRowNum, workoutEndRowNum, dateCol, dateCol));
+				 * 
+				 * // Merging the gap in between workouts row = sheet.getRow(rowNum - 1); cell =
+				 * row.createCell(dateCol); cell.setCellStyle(headerCellStyle);
+				 * sheet.addMergedRegion(new CellRangeAddress(rowNum - 1, rowNum - 1, dateCol,
+				 * weightCol));
+				 * 
+				 * // Merging the cell to the right of the workout row =
+				 * sheet.getRow(workoutStartRowNum); cell = row.createCell(weightCol + 1);
+				 * cell.setCellStyle(headerCellStyle); sheet.addMergedRegion( new
+				 * CellRangeAddress(workoutStartRowNum, rowNum - 1, weightCol + 1, weightCol +
+				 * 1));
+				 * 
+				 * // Adding the borders to and around the workout
+				 * RegionUtil.setBorderBottom(BorderStyle.THICK, new
+				 * CellRangeAddress(workoutEndRowNum, workoutEndRowNum, dateCol, weightCol),
+				 * sheet); RegionUtil.setBorderTop(BorderStyle.THICK, new
+				 * CellRangeAddress(workoutStartRowNum, workoutStartRowNum, dateCol, weightCol),
+				 * sheet); RegionUtil.setBorderLeft(BorderStyle.THICK, new
+				 * CellRangeAddress(workoutStartRowNum, workoutEndRowNum, dateCol, dateCol),
+				 * sheet); RegionUtil.setBorderRight(BorderStyle.THIN, new
+				 * CellRangeAddress(workoutStartRowNum, workoutEndRowNum, dateCol, dateCol),
+				 * sheet); RegionUtil.setBorderRight(BorderStyle.THICK, new
+				 * CellRangeAddress(workoutStartRowNum, workoutEndRowNum, weightCol, weightCol),
+				 * sheet);
+				 * 
+				 * exerciseNum = 1; counter++; // Workout counter }
+				 * 
+				 * // Autosizing the last columns sheet.autoSizeColumn(dateCol, true);
+				 * sheet.autoSizeColumn(exerciseCol, true); sheet.autoSizeColumn(repCol, true);
+				 * sheet.autoSizeColumn(weightCol, true);
+				 * 
+				 * // Looking to see if there were any open cells not colored in int firstCol =
+				 * 0; int lastCol = 4; int i = 1; rowNum = 0;
+				 * 
+				 * // Looking for open spaces for(; i < sheet.getLastRowNum(); i++) { row =
+				 * sheet.getRow(i);
+				 * 
+				 * if (row == null) { break; }
+				 * 
+				 * cell = row.getCell(firstCol); if(cell == null && rowNum == 0) {
+				 * loadCellData(sheet, row, cell, headerCellStyle, firstCol, "", 0); rowNum = i;
+				 * } }
+				 * 
+				 * if (rowNum != i) { sheet.addMergedRegion(new CellRangeAddress(rowNum,i,
+				 * firstCol, lastCol)); }
+				 * 
+				 * 
+				 * }
+				 */
 
 	public static void saveAllInformation(WorkoutTracker tracker, ExerciseList list) throws IOException {
 		Application.launch(ReadAndWrite.class);
@@ -262,6 +443,7 @@ public class ReadAndWrite extends Application {
 		cell.setCellStyle(headerCellStyle);
 		cell.setCellValue("Weight");
 		cell = row.createCell(weightCol + 1);
+		cell.setCellValue("");
 		cell.setCellStyle(headerCellStyle);
 	}
 
