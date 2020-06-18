@@ -18,8 +18,10 @@ Fitness App with JavaFX GUI
 - Create Microsoft Excel spreadsheets to view historical information through Apache POI 4.1.2
   - Currently utilizes JavaFX DirectoryChooser to select/create the directory
   - Excel sheets are able to display all the graphs and correct data. Need to cut down duplicate code
-  - Excel sheets containing past workouts are also able to be created. Currently only a single column but will eventually cover the applicable sheet
-  - Need to figure out how many Excel sheets/documents are required so the user doesn't have large amounts of them
+  - Excel sheets containing past workouts are also able to be created. Each column contains 5 workouts and will span the
+  entire Excel sheet
+  - Need to figure out how many Excel sheets/documents are required so the user doesn't have large amounts of them (By year, 
+  by months, by weeks, etc)
 
 3. Future Features:
 - Support Web Application Framework to be used in realtime online.
