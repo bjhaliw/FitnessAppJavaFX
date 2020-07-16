@@ -18,6 +18,7 @@ public class Workout implements Comparable<Workout> {
 	private ArrayList<Exercise> exerciseArrayList;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
+	private String startTimeString;
 
 	/**
 	 * Default Constructor for the workout object. Initializes the exercise
@@ -26,6 +27,7 @@ public class Workout implements Comparable<Workout> {
 	public Workout() {
 		this.exerciseArrayList = new ArrayList<>();
 		this.startTime = LocalDateTime.now();
+		this.startTimeString = startTime.toString();
 	}
 
 	public void addExercise(Exercise exercise) {

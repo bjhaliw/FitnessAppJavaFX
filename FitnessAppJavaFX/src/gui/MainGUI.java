@@ -8,12 +8,22 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import model.Exercise;
@@ -49,21 +59,64 @@ public class MainGUI extends Application {
 	public void start(Stage primaryStage) throws Exception {	
 		this.stage = primaryStage;
 		this.pane.setTop(createMenuBar());
+		this.pane.setLeft(mainMenuButtonsVBox());
 		
-		if (directoryPath == null) {
-			this.alert.directoryPathNotFound();
-			launchDirectoryChooser();
-			tracker.loadWorkoutList(directoryPath + "/WorkoutList.txt");
-			list.loadExerciseList(directoryPath + "/ExerciseList.txt");
-			
-			System.out.println(list.getAbsExercises().get(0).getExerciseName());
-		}
-		
+		/*
+		 * if (directoryPath == null) { this.alert.directoryPathNotFound();
+		 * launchDirectoryChooser(); tracker.loadWorkoutList(directoryPath +
+		 * "/WorkoutList.txt"); list.loadExerciseList(directoryPath +
+		 * "/ExerciseList.txt"); }
+		 */
+
 		Scene scene = new Scene(this.pane, SCENE_WIDTH, SCENE_HEIGHT);
 		stage.setTitle("Fitness Application");
 		stage.setScene(scene);
 		stage.show();
 			
+	}
+	
+	public VBox mainMenuButtonsVBox() {
+		VBox mainBox = new VBox(50);
+		mainBox.setAlignment(Pos.CENTER);
+		mainBox.setPadding(new Insets(0, 0, 0, 10));
+		
+		Button newWorkoutButton = new Button("New Workout");
+		newWorkoutButton.setOnAction(e -> {
+			pane.setCenter(workoutMenu());
+		});
+		Button viewAllWorkoutsButton = new Button("View All Workouts");
+		Button viewStatisticsButton = new Button("View Statstics");
+		
+		mainBox.getChildren().addAll(newWorkoutButton, viewAllWorkoutsButton, viewStatisticsButton);
+		
+		return mainBox;
+	}
+	
+	public VBox workoutMenu() {
+		VBox mainBox = new VBox(50);
+		mainBox.setAlignment(Pos.CENTER);	
+		HBox tables = new HBox();
+		tables.setAlignment(Pos.CENTER);	
+		
+		// Shows workout dates
+		TableView<Workout> workoutViewTable = new TableView<>();
+		TableColumn<Workout, String> workoutDates = new TableColumn<>("Workout Dates");
+		workoutDates.setCellValueFactory(new PropertyValueFactory<>("startTimeString"));
+		workoutViewTable.getColumns().add(workoutDates);
+		ObservableList<Workout> workoutsList = FXCollections.observableArrayList();
+		
+		for (Workout workout : tracker.getWorkoutList()) {
+			workoutsList.add(workout);
+		}
+		
+		workoutViewTable.setItems(workoutsList);
+		
+		// Shows Exercises and Sets
+		TableView<Exercise> exerciseViewTable = new TableView<>();
+		
+		tables.getChildren().addAll(workoutViewTable, exerciseViewTable);
+		mainBox.getChildren().addAll(tables);
+		return mainBox;
 	}
 	
 	public MenuBar createMenuBar() {
@@ -72,14 +125,15 @@ public class MainGUI extends Application {
 		Menu file = new Menu("File");
 		MenuItem save = new MenuItem("Save");
 		MenuItem saveAs = new MenuItem("Save As...");
-		MenuItem edit = new MenuItem("Edit Application");
+		Menu edit = new Menu("Edit");
 		MenuItem exit = new MenuItem("Exit");
 		MenuItem editGUI = new Menu("Edit GUI");
 		
 		Menu credits = new Menu("Credits");
 
-		menuBar.getMenus().addAll(file, credits);
+		menuBar.getMenus().addAll(file, edit, credits);
 		file.getItems().addAll(save, saveAs, exit);
+		edit.getItems().addAll(editGUI);
 
 		save.setOnAction(e -> {
 			try {
