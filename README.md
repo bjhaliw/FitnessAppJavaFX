@@ -1,7 +1,7 @@
 # FitnessAppJavaFX
 Fitness App with JavaFX GUI
 
-1. Current Features:
+# Current Features
 - Command line interaction with multiple menus.
   - Navigate to required menus to manipulate data
 - Multiple classes  with applicable controllers
@@ -14,13 +14,17 @@ Fitness App with JavaFX GUI
   - Read and Write capabilities to create and save selectable exercises
   - Manipulate exercise list to add/remove/edit exercises to be performed
 
-2. In-Work Features:
+# In-Work Features
 - Create Microsoft Excel spreadsheets to view historical information through Apache POI 4.1.2
   - Currently utilizes JavaFX DirectoryChooser to select/create the directory
   - Excel sheets are able to display all the graphs and correct data. Need to cut down duplicate code
-  - Excel sheets containing past workouts are also able to be created. Currently only a single column but will eventually cover the applicable sheet
-  - Need to figure out how many Excel sheets/documents are required so the user doesn't have large amounts of them
+  - Excel sheets containing past workouts are also able to be created. Each column contains 5 workouts and will span the
+  entire Excel sheet
+  - Need to figure out how many Excel sheets/documents are required so the user doesn't have large amounts of them (By year, 
+  by months, by weeks, etc)
+- JavaFX menus are currently being created for the user to interact with the program instead of the command line
 
-3. Future Features:
+# Future Features
 - Support Web Application Framework to be used in realtime online.
   - Currently researching best way to accomplish this.
+- Full JavaFX functionality
