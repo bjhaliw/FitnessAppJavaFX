@@ -14,11 +14,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
@@ -42,11 +44,11 @@ public class MainGUI extends Application {
 	Exercise exercise;
 	Button homeButton;
 	Stage stage;
-	
+
 	public static final int SCENE_WIDTH = 1280;
 	public static final int SCENE_HEIGHT = 800;
 	public static String directoryPath;
-		
+
 	public MainGUI() {
 		this.list = new ExerciseList();
 		this.tracker = new WorkoutTracker();
@@ -56,69 +58,74 @@ public class MainGUI extends Application {
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {	
+	public void start(Stage primaryStage) throws Exception {
 		this.stage = primaryStage;
-		this.pane.setTop(createMenuBar());
-		this.pane.setLeft(mainMenuButtonsVBox());
-		
-		/*
-		 * if (directoryPath == null) { this.alert.directoryPathNotFound();
-		 * launchDirectoryChooser(); tracker.loadWorkoutList(directoryPath +
-		 * "/WorkoutList.txt"); list.loadExerciseList(directoryPath +
-		 * "/ExerciseList.txt"); }
-		 */
+		VBox top = new VBox(10);
+		Label text = new Label();
+		text.setText("Fitness Tracker\nBrenton Haliw\nbrenton.haliw@gmail.com\nVersion 1.0\nJuly 21, 2020");
+		top.getChildren().addAll(createMenuBar(), mainMenuButtonsHBox());
+
+		this.pane.setTop(top);
+		this.pane.setCenter(text);
+
+		if (directoryPath == null) {
+			this.alert.directoryPathNotFound();
+			launchDirectoryChooser();
+			tracker.loadWorkoutList(directoryPath + "/WorkoutList.txt");
+			list.loadExerciseList(directoryPath + "/ExerciseList.txt");
+		}
 
 		Scene scene = new Scene(this.pane, SCENE_WIDTH, SCENE_HEIGHT);
 		stage.setTitle("Fitness Application");
 		stage.setScene(scene);
 		stage.show();
-			
+
 	}
-	
-	public VBox mainMenuButtonsVBox() {
-		VBox mainBox = new VBox(50);
+
+	public HBox mainMenuButtonsHBox() {
+		HBox mainBox = new HBox(50);
 		mainBox.setAlignment(Pos.CENTER);
 		mainBox.setPadding(new Insets(0, 0, 0, 10));
-		
-		Button newWorkoutButton = new Button("New Workout");
-		newWorkoutButton.setOnAction(e -> {
+
+		Button workoutButton = new Button("Workout Tracker");
+		workoutButton.setOnAction(e -> {
 			pane.setCenter(workoutMenu());
 		});
-		Button viewAllWorkoutsButton = new Button("View All Workouts");
+		Button exerciseListButton = new Button("Exercise List");
 		Button viewStatisticsButton = new Button("View Statstics");
-		
-		mainBox.getChildren().addAll(newWorkoutButton, viewAllWorkoutsButton, viewStatisticsButton);
-		
+
+		mainBox.getChildren().addAll(workoutButton, exerciseListButton, viewStatisticsButton);
+
 		return mainBox;
 	}
-	
+
 	public VBox workoutMenu() {
 		VBox mainBox = new VBox(50);
-		mainBox.setAlignment(Pos.CENTER);	
-		HBox tables = new HBox();
-		tables.setAlignment(Pos.CENTER);	
-		
+		mainBox.setAlignment(Pos.CENTER);
+		HBox tables = new HBox(30);
+		tables.setAlignment(Pos.CENTER);
+
 		// Shows workout dates
 		TableView<Workout> workoutViewTable = new TableView<>();
 		TableColumn<Workout, String> workoutDates = new TableColumn<>("Workout Dates");
 		workoutDates.setCellValueFactory(new PropertyValueFactory<>("startTimeString"));
 		workoutViewTable.getColumns().add(workoutDates);
 		ObservableList<Workout> workoutsList = FXCollections.observableArrayList();
-		
+
 		for (Workout workout : tracker.getWorkoutList()) {
 			workoutsList.add(workout);
 		}
-		
+
 		workoutViewTable.setItems(workoutsList);
-		
+
 		// Shows Exercises and Sets
 		TableView<Exercise> exerciseViewTable = new TableView<>();
-		
+
 		tables.getChildren().addAll(workoutViewTable, exerciseViewTable);
 		mainBox.getChildren().addAll(tables);
 		return mainBox;
 	}
-	
+
 	public MenuBar createMenuBar() {
 		MenuBar menuBar = new MenuBar();
 
@@ -128,7 +135,7 @@ public class MainGUI extends Application {
 		Menu edit = new Menu("Edit");
 		MenuItem exit = new MenuItem("Exit");
 		MenuItem editGUI = new Menu("Edit GUI");
-		
+
 		Menu credits = new Menu("Credits");
 
 		menuBar.getMenus().addAll(file, edit, credits);
@@ -141,12 +148,12 @@ public class MainGUI extends Application {
 					launchDirectoryChooser();
 				}
 				ReadAndWrite.saveAllInformation(this.tracker, this.list, directoryPath);
-				
+
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 		});
-		
+
 		saveAs.setOnAction(e -> {
 			launchDirectoryChooser();
 			try {
@@ -156,7 +163,6 @@ public class MainGUI extends Application {
 			}
 		});
 
-
 		exit.setOnAction(e -> {
 			this.alert.exitProgramAlert();
 
@@ -164,12 +170,12 @@ public class MainGUI extends Application {
 
 		return menuBar;
 	}
-	
+
 	public void launchDirectoryChooser() {
 		Stage stage = new Stage();
-		
+
 		DirectoryChooser chooser = new DirectoryChooser();
-		chooser.setTitle("Select or create a folder");
+		chooser.setTitle("Select Fitness Application Directory");
 		stage.setAlwaysOnTop(true);
 
 		File directory = chooser.showDialog(stage);
@@ -190,7 +196,7 @@ public class MainGUI extends Application {
 		}
 
 	}
-	
+
 	public static void main(String[] args) {
 		Application.launch(args);
 
