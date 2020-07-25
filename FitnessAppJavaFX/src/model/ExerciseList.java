@@ -6,10 +6,10 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Scanner;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 
 /**
  * This class creates multiple ArrayLists for the different types of body parts
@@ -21,16 +21,9 @@ import javafx.collections.ObservableList;
  * @author Brenton Haliw
  *
  */
-public class ExerciseList  {
+public class ExerciseList {
 
-	private ArrayList<Exercise> absList;
-	private ArrayList<Exercise> backList;
-	private ArrayList<Exercise> bicepsList;
-	private ArrayList<Exercise> cardioList;
-	private ArrayList<Exercise> chestList;
-	private ArrayList<Exercise> legsList;
-	private ArrayList<Exercise> shouldersList;
-	private ArrayList<Exercise> tricepsList;
+	private HashMap<String, Exercise> exerciseList;
 
 	public static final int ABS = 1;
 	public static final int BACK = 2;
@@ -41,172 +34,45 @@ public class ExerciseList  {
 	public static final int SHOULDERS = 7;
 	public static final int TRICEPS = 8;
 
-	
-
 	/**
-	 * Default constructor for the ExerciseList class. Initializes all of
-	 * the ArrayList objects to track exercises for different muscle groups.
+	 * Default constructor for the ExerciseList class. Initializes HashMap.
 	 */
 	public ExerciseList() {
-		absList = new ArrayList<>();
-		backList = new ArrayList<>();
-		bicepsList = new ArrayList<>();
-		cardioList = new ArrayList<>();
-		chestList = new ArrayList<>();
-		legsList = new ArrayList<>();
-		shouldersList = new ArrayList<>();
-		tricepsList = new ArrayList<>();
+		this.exerciseList = new HashMap<>();
 	}
 
 	/**
 	 * This method adds an exercise to the repository. Checks to make sure that the
-	 * same exercise isn't being added multiple times
+	 * same exercise isn't being added multiple times.
 	 * 
 	 * @param exercise
-	 * @return specified exercise list
 	 */
-	public ArrayList<Exercise> addExercise(Exercise exercise) {
-
-		// CHECK ABS LIST
-		if (exercise.getExerciseType().equals("Abs")) {
-			addExerciseAux(exercise, this.absList);
-			return this.absList;
+	public void addExercise(Exercise exercise) {
+		if (this.exerciseList.containsKey(exercise.getExerciseName())) {
+			System.out.println("Exercise already exists in the database.");
+		} else {
+			this.exerciseList.put(exercise.getExerciseName(), exercise);
+			System.out.println(exercise.getExerciseName() + " has been added to the database.");
 		}
-		
-		// CHECK BACK LIST
-		if (exercise.getExerciseType().equals("Back")) {		
-			addExerciseAux(exercise, this.backList);
-			return this.backList;
-		}
-		
-		// CHECK BICEPS LIST
-		if (exercise.getExerciseType().equals("Biceps")) {
-			addExerciseAux(exercise, this.bicepsList);
-			return this.bicepsList;
-		}
-		
-		// CHECK CARDIO LIST
-		if (exercise.getExerciseType().equals("Cardio")) {
-			addExerciseAux(exercise, this.cardioList);
-			return this.cardioList;
-		}
-
-		// CHECK CHEST LIST
-		if (exercise.getExerciseType().equals("Chest")) {
-			addExerciseAux(exercise, this.chestList);
-			return this.chestList;
-		}
-
-		// CHECK LEGS LIST
-		if (exercise.getExerciseType().equals("Legs")) {
-			addExerciseAux(exercise, this.legsList);
-			return this.legsList;
-		}
-
-		// CHECK SHOULDERS LIST
-		if (exercise.getExerciseType().equals("Shoulders")) {
-			addExerciseAux(exercise, this.shouldersList);
-			return this.shouldersList;
-		}
-		
-		
-		// CHECK TRICEPS LIST
-		if (exercise.getExerciseType().equals("Triceps")) {
-			addExerciseAux(exercise, this.tricepsList);
-			return this.tricepsList;
-		}
-
-		return null;
-
-	}
-	
-	/**
-	 * This method checks the specified exercise list to see if an exercise
-	 * that is trying to be added already exists. Returns true if exercise
-	 * is present and false if exercise of that name is present.
-	 * @param exerciseType
-	 * @param list
-	 */
-	private void addExerciseAux(Exercise exercise, ArrayList<Exercise> list) {
-		
-		for (Exercise current : list) {
-			if (current.getExerciseName().equals(exercise.getExerciseName())) {
-				System.out.println("Exercise already exists");
-				return;
-			}
-		}
-		
-		list.add(exercise);
-		Collections.sort(list);
-		System.out.println("" + exercise.getExerciseName() + " successfully added!");
-
 	}
 
 	/**
-	 * Removes the specified exercise from the repository
+	 * Removes the specified exercise from the repository.
 	 * 
 	 * @param exercise
-	 * @return specified exercise ArrayList
 	 */
-	public ArrayList<Exercise> removeExercise(Exercise exercise) {
-
-
-		if (exercise.getExerciseType().equals("Abs")) {
-			removeExerciseAux(exercise, absList);
-			return this.absList;
-		}
-		
-		if (exercise.getExerciseType().equals("Back")) {
-			removeExerciseAux(exercise, backList);
-			return this.backList;
-		}
-		
-		if (exercise.getExerciseType().equals("Biceps")) {
-			removeExerciseAux(exercise, bicepsList);
-			return this.bicepsList;
-		}
-		
-		if (exercise.getExerciseType().equals("Cardio")) {
-			removeExerciseAux(exercise, cardioList);
-			return this.cardioList;
-		}
-		
-		if (exercise.getExerciseType().equals("Chest")) {
-			removeExerciseAux(exercise, chestList);
-			return this.chestList;
-		}	
-		
-		if (exercise.getExerciseType().equals("Legs")) {
-			removeExerciseAux(exercise, legsList);
-			return this.legsList;
-		}
-		
-		if (exercise.getExerciseType().equals("Shoulders")) {
-			removeExerciseAux(exercise, shouldersList);
-			return this.shouldersList;
-		}
-
-		if (exercise.getExerciseType().equals("Triceps")) {
-			removeExerciseAux(exercise, tricepsList);
-			return this.tricepsList;
-		}
-
-		return null;
-	}
-	
-	private void removeExerciseAux(Exercise exercise, ArrayList<Exercise> list) {
-		for (Exercise current : list) {
-			if (current.getExerciseName().equals(exercise.getExerciseName())) {
-				list.remove(current);
-				System.out.println(current.getExerciseName() + " has been removed.");
-				return;
-			}
+	public void removeExercise(Exercise exercise) {
+		if (this.exerciseList.containsKey(exercise.getExerciseName())) {
+			this.exerciseList.remove(exercise.getExerciseName());
+			System.out.println(exercise.getExerciseName() + " has been removed from the database.");
+		} else {
+			System.out.println("Exercise does not exist in the database.");
 		}
 	}
 
 	/**
 	 * Saves the exercise list to the specified document so that it can be used at a
-	 * later time by the user.
+	 * later time by the user. Will save as plain text to a text document.
 	 * 
 	 * @param fileName
 	 */
@@ -216,28 +82,28 @@ public class ExerciseList  {
 			PrintWriter writer = new PrintWriter(fileName, "UTF-8");
 
 			writer.println("Exercise Type: Abs");
-			saveExerciseListAux(writer, absList);
-			
+			saveExerciseListAux(writer, "Abs");
+
 			writer.println("\nExercise Type: Back");
-			saveExerciseListAux(writer, backList);
-			
+			saveExerciseListAux(writer, "Back");
+
 			writer.println("\nExercise Type: Biceps");
-			saveExerciseListAux(writer, bicepsList);
-			
+			saveExerciseListAux(writer, "Biceps");
+
 			writer.println("\nExercise Type: Cardio");
-			saveExerciseListAux(writer, cardioList);
+			saveExerciseListAux(writer, "Cardio");
 
 			writer.println("\nExercise Type: Chest");
-			saveExerciseListAux(writer, chestList);
+			saveExerciseListAux(writer, "Chest");
 
 			writer.println("\nExercise Type: Legs");
-			saveExerciseListAux(writer, legsList);
+			saveExerciseListAux(writer, "Legs");
 
 			writer.println("\nExercise Type: Shoulders");
-			saveExerciseListAux(writer, shouldersList);
-			
+			saveExerciseListAux(writer, "Shoulders");
+
 			writer.println("\nExercise Type: Triceps");
-			saveExerciseListAux(writer, tricepsList);
+			saveExerciseListAux(writer, "Triceps");
 
 			writer.close();
 
@@ -247,15 +113,18 @@ public class ExerciseList  {
 		}
 
 	}
-	
-	private void saveExerciseListAux(PrintWriter writer, ArrayList<Exercise> list) {
+
+	private void saveExerciseListAux(PrintWriter writer, String exerciseType) {
+		ArrayList<Exercise> list = hashmapToArrayList(exerciseType);
+		
 		for (Exercise exercise : list) {
 			writer.println("    " + exercise.getExerciseName());
 		}
 	}
 
 	/**
-	 * Loads the exercise list so that it can be used by the user.
+	 * Loads the exercise list so that it can be used by the user. Loads from a
+	 * plain text document.
 	 * 
 	 * @param fileName
 	 */
@@ -275,34 +144,17 @@ public class ExerciseList  {
 
 			String current = "";
 			String exerciseType = "";
-			
-			while(scanner.hasNextLine()) {
+
+			while (scanner.hasNextLine()) {
 				current = scanner.nextLine();
-				
+
 				if (current.contains("Exercise Type: ")) {
 					exerciseType = current.substring(15);
-				} else if (!current.isEmpty()) {
-					
-					if (exerciseType.equals("Abs")) {
-						this.absList.add(new Exercise(current.trim(), exerciseType));
-					} else if (exerciseType.equals("Back")) {
-						this.backList.add(new Exercise(current.trim(), exerciseType));
-					} else if (exerciseType.equals("Biceps")) {
-						this.bicepsList.add(new Exercise(current.trim(), exerciseType));
-					} else if (exerciseType.equals("Cardio")) {
-						this.cardioList.add(new Exercise(current.trim(), exerciseType));
-					} else if (exerciseType.equals("Chest")) {
-						this.chestList.add(new Exercise(current.trim(), exerciseType));
-					} else if (exerciseType.equals("Legs")) {
-						this.legsList.add(new Exercise(current.trim(), exerciseType));
-					} else if (exerciseType.equals("Shoulders")) {
-						this.shouldersList.add(new Exercise(current.trim(), exerciseType));
-					} else if (exerciseType.equals("Triceps")) {
-						this.tricepsList.add(new Exercise(current.trim(), exerciseType));
-					}
-				}			
+				} else if (!current.isEmpty()) {			
+					this.exerciseList.put(current.trim(), new Exercise(current.trim(), exerciseType));
+				}
 			}
-			
+
 			scanner.close();
 
 		} catch (FileNotFoundException e) {
@@ -318,85 +170,74 @@ public class ExerciseList  {
 	 * already exist.
 	 */
 	public void createStandardList() {
-		
+
 		////////////// ABS EXERCISES //////////////
-		this.absList.add(new Exercise("Crunch", "Abs"));
-		this.absList.add(new Exercise("Hanging Knee Raise", "Abs"));
-		this.absList.add(new Exercise("Russian Twists", "Abs"));
-		this.absList.add(new Exercise("Hanging Leg Raise", "Abs"));
-		this.absList.add(new Exercise("Sit Up", "Abs"));
-		this.absList.add(new Exercise("Plank", "Abs"));
-		
+		this.exerciseList.put("Crunch", new Exercise("Crunch", "Abs"));
+		this.exerciseList.put("Hanging Knee Raise", new Exercise("Hanging Knee Raise", "Abs"));
+		this.exerciseList.put("Russian Twists", new Exercise("Russian Twists", "Abs"));
+		this.exerciseList.put("Hanging Leg Raise", new Exercise("Hanging Leg Raise", "Abs"));
+		this.exerciseList.put("Sit Up", new Exercise("Sit Up", "Abs"));
+		this.exerciseList.put("Plank", new Exercise("Plank", "Abs"));
+
 		////////////// BACK EXERCISES //////////////
-		this.backList.add(new Exercise("Pull Up", "Back"));
-		this.backList.add(new Exercise("Chin Up", "Back"));
-		this.backList.add(new Exercise("Barbell Row", "Back"));
-		this.backList.add(new Exercise("T-Bar Row", "Back"));
-		this.backList.add(new Exercise("Straight Arm Cable Pushdown", "Back"));
-		this.backList.add(new Exercise("Barbell Deadlift", "Back"));
-		this.backList.add(new Exercise("Trapbar Deadlift", "Back"));
-		this.backList.add(new Exercise("Lat Pulldown", "Back"));
-		this.backList.add(new Exercise("Dumbell Shrug", "Back"));
-		this.backList.add(new Exercise("Barbell Shrug", "Back"));
-		this.backList.add(new Exercise("Cable Row", "Back"));
-		
+		this.exerciseList.put("Pull Up", new Exercise("Pull Up", "Back"));
+		this.exerciseList.put("Chin Up", new Exercise("Chin Up", "Back"));
+		this.exerciseList.put("Barbell Row", new Exercise("Barbell Row", "Back"));
+		this.exerciseList.put("T-Bar Row", new Exercise("T-Bar Row", "Back"));
+		this.exerciseList.put("Straight Arm Cable Pushdown", new Exercise("Straight Arm Cable Pushdown", "Back"));
+		this.exerciseList.put("Barbell Deadlift", new Exercise("Barbell Deadlift", "Back"));
+		this.exerciseList.put("Trapbar Deadlift", new Exercise("Trapbar Deadlift", "Back"));
+		this.exerciseList.put("Lat Pulldown", new Exercise("Lat Pulldown", "Back"));
+		this.exerciseList.put("Dumbell Shrug", new Exercise("Dumbell Shrug", "Back"));
+		this.exerciseList.put("Barbell Shrug", new Exercise("Barbell Shrug", "Back"));
+		this.exerciseList.put("Cable Row", new Exercise("Cable Row", "Back"));
+
 		////////////// BICEPS EXERCISES //////////////
-		this.bicepsList.add(new Exercise("Dumbell Curl", "Biceps"));
-		this.bicepsList.add(new Exercise("Cable Curl", "Biceps"));
-		this.bicepsList.add(new Exercise("Hammer Curl", "Biceps"));
-		this.bicepsList.add(new Exercise("Barbell Curl", "Biceps"));
-		
+		this.exerciseList.put("Dumbell Curl", new Exercise("Dumbell Curl", "Biceps"));
+		this.exerciseList.put("Cable Curl", new Exercise("Cable Curl", "Biceps"));
+		this.exerciseList.put("Hammer Curl", new Exercise("Hammer Curl", "Biceps"));
+		this.exerciseList.put("Barbell Curl", new Exercise("Barbell Curl", "Biceps"));
+
 		////////////// CARDIO EXERCISES //////////////
-		this.cardioList.add(new Exercise("Treadmill Running", "Cardio"));
-		this.cardioList.add(new Exercise("Treadmill Walking", "Cardio"));
-		this.cardioList.add(new Exercise("Outside Running", "Cardio"));
-		this.cardioList.add(new Exercise("Outside Walking", "Cardio"));
-		this.cardioList.add(new Exercise("Elliptical Trainer", "Cardio"));
-		this.cardioList.add(new Exercise("Outside Biking", "Cardio"));
-		this.cardioList.add(new Exercise("Stationary Biking", "Cardio"));
-		this.cardioList.add(new Exercise("Stair Stepper", "Cardio"));
+		this.exerciseList.put("Treadmill Running", new Exercise("Treadmill Running", "Cardio"));
+		this.exerciseList.put("Treadmill Walking", new Exercise("Treadmill Walking", "Cardio"));
+		this.exerciseList.put("Outside Running", new Exercise("Outside Running", "Cardio"));
+		this.exerciseList.put("Outside Walking", new Exercise("Outside Walking", "Cardio"));
+		this.exerciseList.put("Elliptical Trainer", new Exercise("Elliptical Trainer", "Cardio"));
+		this.exerciseList.put("Outside Biking", new Exercise("Outside Biking", "Cardio"));
+		this.exerciseList.put("Stationary Biking", new Exercise("Stationary Biking", "Cardio"));
+		this.exerciseList.put("Stair Stepper", new Exercise("Stair Stepper", "Cardio"));
 
 		////////////// CHEST EXERCISES //////////////
-		this.chestList.add(new Exercise("Flat Barbell Bench Press", "Chest"));
-		this.chestList.add(new Exercise("Flat Dumbell Flies", "Chest"));
-		this.chestList.add(new Exercise("Incline Barbell Bench Press", "Chest"));
-		this.chestList.add(new Exercise("Flat Cable Flies", "Chest"));
-		this.chestList.add(new Exercise("Incline Cable Flies", "Chest"));
-		this.chestList.add(new Exercise("High Cable Crossover", "Chest"));
+		this.exerciseList.put("Flat Barbell Bench Press", new Exercise("Flat Barbell Bench Press", "Chest"));
+		this.exerciseList.put("Flat Dumbell Flies", new Exercise("Flat Dumbell Flies", "Chest"));
+		this.exerciseList.put("Incline Barbell Bench Press", new Exercise("Incline Barbell Bench Press", "Chest"));
+		this.exerciseList.put("Flat Cable Flies", new Exercise("Flat Cable Flies", "Chest"));
+		this.exerciseList.put("Incline Cable Flies", new Exercise("Incline Cable Flies", "Chest"));
+		this.exerciseList.put("High Cable Crossover", new Exercise("High Cable Crossover", "Chest"));
 
 		////////////// LEGS EXERCISES //////////////
-		this.legsList.add(new Exercise("Barbell Squat", "Legs"));
-		this.legsList.add(new Exercise("Good Mornings", "Legs"));
-		this.legsList.add(new Exercise("Dumbell Lunge", "Legs"));
-		this.legsList.add(new Exercise("Barbell Calf Raise", "Legs"));
-		this.legsList.add(new Exercise("Cable Hip Abduction", "Legs"));
-		this.legsList.add(new Exercise("Cable Hip Adduction", "Legs"));
-		this.legsList.add(new Exercise("Cable Hip Thrust", "Legs"));
-		this.legsList.add(new Exercise("Romanian Deadlift", "Legs"));
-		
-		////////////// SHOULDERS EXERCISES //////////////
-		this.shouldersList.add(new Exercise("Overhead Press", "Shoulders"));
-		this.shouldersList.add(new Exercise("Lateral Dumbell Raise", "Shoulders"));
-		this.shouldersList.add(new Exercise("Front Dumbell Raise", "Shoulders"));
-		this.shouldersList.add(new Exercise("Cable Lateral Raise", "Shoulders"));
-		this.shouldersList.add(new Exercise("Dumbell Shoulder Press", "Shoulders"));
-		this.shouldersList.add(new Exercise("Cable Face Pull", "Shoulders"));
-		
-		////////////// TRICEPS EXERCISES //////////////
-		this.tricepsList.add(new Exercise("Overhead Cable Extension", "Triceps"));
-		this.tricepsList.add(new Exercise("Cable Rope Pushdown", "Triceps"));
-		this.tricepsList.add(new Exercise("Dumbell Skullcrushers", "Triceps"));
-		
-		///// SORTING THE LISTS BY ALPHABETICAL ORDER /////
-		Collections.sort(this.absList);	
-		Collections.sort(this.backList);
-		Collections.sort(this.bicepsList);	
-		Collections.sort(this.cardioList);	
-		Collections.sort(this.chestList);
-		Collections.sort(this.legsList);
-		Collections.sort(this.shouldersList);
-		Collections.sort(this.tricepsList);	
+		this.exerciseList.put("Barbell Squat", new Exercise("Barbell Squat", "Legs"));
+		this.exerciseList.put("Good Mornings", new Exercise("Good Mornings", "Legs"));
+		this.exerciseList.put("Dumbell Lunge", new Exercise("Dumbell Lunge", "Legs"));
+		this.exerciseList.put("Barbell Calf Raise", new Exercise("Barbell Calf Raise", "Legs"));
+		this.exerciseList.put("Cable Hip Abduction", new Exercise("Cable Hip Abduction", "Legs"));
+		this.exerciseList.put("Cable Hip Adduction", new Exercise("Cable Hip Adduction", "Legs"));
+		this.exerciseList.put("Cable Hip Thrust", new Exercise("Cable Hip Thrust", "Legs"));
+		this.exerciseList.put("Romanian Deadlift", new Exercise("Romanian Deadlift", "Legs"));
 
+		////////////// SHOULDERS EXERCISES //////////////
+		this.exerciseList.put("Overhead Press", new Exercise("Overhead Press", "Shoulders"));
+		this.exerciseList.put("Lateral Dumbell Raise", new Exercise("Lateral Dumbell Raise", "Shoulders"));
+		this.exerciseList.put("Front Dumbell Raise", new Exercise("Front Dumbell Raise", "Shoulders"));
+		this.exerciseList.put("Cable Lateral Raise", new Exercise("Cable Lateral Raise", "Shoulders"));
+		this.exerciseList.put("Dumbell Shoulder Press", new Exercise("Dumbell Shoulder Press", "Shoulders"));
+		this.exerciseList.put("Cable Face Pull", new Exercise("Cable Face Pull", "Shoulders"));
+
+		////////////// TRICEPS EXERCISES //////////////
+		this.exerciseList.put("Overhead Cable Extension", new Exercise("Overhead Cable Extension", "Triceps"));
+		this.exerciseList.put("Cable Rope Pushdown", new Exercise("Cable Rope Pushdown", "Triceps"));
+		this.exerciseList.put("Dumbell Skullcrushers", new Exercise("Dumbell Skullcrushers", "Triceps"));
 	}
 
 	/**
@@ -409,35 +250,36 @@ public class ExerciseList  {
 		String output = "";
 
 		if (selection == ExerciseList.ABS) {
-			output = printExerciseListAux(absList);
+			output = printExerciseListAux(getAbsList());
 		} else if (selection == ExerciseList.BACK) {
-			output = printExerciseListAux(backList);
+			output = printExerciseListAux(getBackList());
 		} else if (selection == ExerciseList.BICEPS) {
-			output = printExerciseListAux(bicepsList);
+			output = printExerciseListAux(getBicepsList());
 		} else if (selection == ExerciseList.CARDIO) {
-			output = printExerciseListAux(cardioList);
+			output = printExerciseListAux(getCardioList());
 		} else if (selection == ExerciseList.CHEST) {
-			output = printExerciseListAux(chestList);
+			output = printExerciseListAux(getChestList());
 		} else if (selection == ExerciseList.LEGS) {
-			output = printExerciseListAux(legsList);
+			output = printExerciseListAux(getLegsList());
 		} else if (selection == ExerciseList.SHOULDERS) {
-			output = printExerciseListAux(shouldersList);
+			output = printExerciseListAux(getShouldersList());
 		} else if (selection == ExerciseList.TRICEPS) {
-			output = printExerciseListAux(tricepsList);
+			output = printExerciseListAux(getTricepsList());
 		}
 
 		return output;
 	}
-	
+
 	/**
 	 * Helper method for the printExerciseList method
+	 * 
 	 * @param list
 	 * @return output
 	 */
 	private String printExerciseListAux(ArrayList<Exercise> list) {
 		String output = "";
 		int i = 1;
-		
+
 		for (Exercise exercise : list) {
 			if (i == list.size()) {
 				output += i + ": " + exercise.getExerciseName();
@@ -446,134 +288,158 @@ public class ExerciseList  {
 				i++;
 			}
 		}
-		
+
 		return output;
 	}
 	
-	//////// GETTERS FOR ARRAYLISTS //////// 
+	public ArrayList<Exercise> hashmapToArrayList(String exerciseType) {
+		ArrayList<Exercise> list = new ArrayList<>();
+		
+		for (Exercise exercise : exerciseList.values()) {
+			if (exercise.getExerciseType().equals(exerciseType)) {
+				list.add(exercise);
+			}
+		}
+		
+		Collections.sort(list);
+		
+		return list;
+	}
+
+	//////// GETTERS FOR ARRAYLISTS ////////
 	public ArrayList<Exercise> getAbsList() {
-		return this.absList;
+		return hashmapToArrayList("Abs");
 	}
-	
+
 	public ArrayList<Exercise> getBackList() {
-		return this.backList;
+		return hashmapToArrayList("Back");
 	}
-	
+
 	public ArrayList<Exercise> getBicepsList() {
-		return this.bicepsList;
+		return hashmapToArrayList("Biceps");
 	}
-	
+
 	public ArrayList<Exercise> getCardioList() {
-		return this.cardioList;
+		return hashmapToArrayList("Cardio");
 	}
-	
+
 	public ArrayList<Exercise> getChestList() {
-		return this.chestList;
+		return hashmapToArrayList("Chest");
 	}
-	
+
 	public ArrayList<Exercise> getLegsList() {
-		return this.legsList;
+		return hashmapToArrayList("Legs");
 	}
-	
+
 	public ArrayList<Exercise> getShouldersList() {
-		return this.shouldersList;
+		return hashmapToArrayList("Shoulders");
 	}
-	
+
 	public ArrayList<Exercise> getTricepsList() {
-		return this.tricepsList;
+		return hashmapToArrayList("Triceps");
 	}
-	
-	
-	//////// OBSERVABLE LISTS FOR JAVAFX GUI //////// 
-	
+
+	//////// OBSERVABLE LISTS FOR JAVAFX GUI ////////
+
 	/**
-	 * Returns an ObservableList object for abs exercises to
-	 * be used in JavaFX applications.
+	 * Returns an ObservableList object for abs exercises to be used in JavaFX
+	 * applications.
+	 * 
 	 * @return absList
 	 */
 	public ObservableList<Exercise> getAbsExercises() {
-		return addObservableListAux(absList);
+		return addObservableListAux(getAbsList());
 	}
 
 	/**
-	 * Returns an ObservableList object for back exercises to
-	 * be used in JavaFX applications.
+	 * Returns an ObservableList object for back exercises to be used in JavaFX
+	 * applications.
+	 * 
 	 * @return backList
 	 */
 	public ObservableList<Exercise> getBackExercises() {
-		return addObservableListAux(backList);
+		return addObservableListAux(getBackList());
 	}
 
 	/**
-	 * Returns an ObservableList object for biceps exercises to
-	 * be used in JavaFX applications.
+	 * Returns an ObservableList object for biceps exercises to be used in JavaFX
+	 * applications.
+	 * 
 	 * @return bicepsList
 	 */
 	public ObservableList<Exercise> getBicepsExercises() {
-		return addObservableListAux(bicepsList);
+		return addObservableListAux(getBicepsList());
 	}
 
 	/**
-	 * Returns an ObservableList object for cardio exercises to
-	 * be used in JavaFX applications.
+	 * Returns an ObservableList object for cardio exercises to be used in JavaFX
+	 * applications.
+	 * 
 	 * @return cardioList
 	 */
 	public ObservableList<Exercise> getCardioExercises() {
-		return addObservableListAux(cardioList);
-	}
-	
-	/**
-	 * Returns an ObservableList object for chest exercises to
-	 * be used in JavaFX applications.
-	 * @return chestList
-	 */
-	public ObservableList<Exercise> getChestExercises() {
-		return addObservableListAux(chestList);
-	}
-	
-	/**
-	 * Returns an ObservableList object for legs exercises to
-	 * be used in JavaFX applications.
-	 * @return legsList
-	 */
-	public ObservableList<Exercise> getLegsExercises() {
-		return addObservableListAux(legsList);
+		return addObservableListAux(getCardioList());
 	}
 
 	/**
-	 * Returns an ObservableList object for shoulders exercises to
-	 * be used in JavaFX applications.
+	 * Returns an ObservableList object for chest exercises to be used in JavaFX
+	 * applications.
+	 * 
+	 * @return chestList
+	 */
+	public ObservableList<Exercise> getChestExercises() {
+		return addObservableListAux(getChestList());
+	}
+
+	/**
+	 * Returns an ObservableList object for legs exercises to be used in JavaFX
+	 * applications.
+	 * 
+	 * @return legsList
+	 */
+	public ObservableList<Exercise> getLegsExercises() {
+		return addObservableListAux(getLegsList());
+	}
+
+	/**
+	 * Returns an ObservableList object for shoulders exercises to be used in JavaFX
+	 * applications.
+	 * 
 	 * @return shouldersList
 	 */
 	public ObservableList<Exercise> getShouldersExercises() {
-		return addObservableListAux(shouldersList);
+		return addObservableListAux(getShouldersList());
 	}
-	
+
 	/**
-	 * Returns an ObservableList object for triceps exercises to
-	 * be used in JavaFX applications.
+	 * Returns an ObservableList object for triceps exercises to be used in JavaFX
+	 * applications.
+	 * 
 	 * @return tricepsList
 	 */
 	public ObservableList<Exercise> getTricepsExercises() {
-		return addObservableListAux(tricepsList);
+		return addObservableListAux(getTricepsList());
 	}
-	
+
 	/**
 	 * Helper method to add ArrayList objects to an ObservableList object
+	 * 
 	 * @param list
 	 * @return ObservableList object
 	 */
-	private ObservableList<Exercise>  addObservableListAux(ArrayList<Exercise> list) {
+	private ObservableList<Exercise> addObservableListAux(ArrayList<Exercise> list) {
 		ObservableList<Exercise> exercises = FXCollections.observableArrayList();
 		for (Exercise exercise : list) {
 			exercises.add(exercise);
 		}
-		
+
 		return exercises;
 	}
 
 	/**
-	 * Creates and returns an ObservableList object with different types of exercises
+	 * Creates and returns an ObservableList object with different types of
+	 * exercises
+	 * 
 	 * @return ObservableList object
 	 */
 	public ObservableList<Exercise> getTypeExercises() {
@@ -588,10 +454,7 @@ public class ExerciseList  {
 		exercises.add(new Exercise("", "Shoulders"));
 		exercises.add(new Exercise("", "Triceps"));
 
-
 		return exercises;
 	}
-
-
 
 }
