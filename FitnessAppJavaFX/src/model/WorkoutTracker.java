@@ -100,7 +100,7 @@ public class WorkoutTracker {
 		PrintWriter writer = new PrintWriter(fileName, "UTF-8");
 
 		for (Workout workout : this.workoutList) {
-			writer.println("Start Time:" + workout.getStartTime());
+			writer.println("Start Time: " + workout.getStartTime());
 			for (Exercise exercise : workout.getExerciseArrayList()) {
 				writer.println("    " + exercise);
 				for (Set set : exercise.getSetList()) {
@@ -146,7 +146,7 @@ public class WorkoutTracker {
 			if (current.contains("Start Time:")) {
 				workoutNum++;
 				exerciseNum = -1;
-				current = current.substring(11);
+				current = current.substring(12);
 				this.workoutList.add(new Workout());			
 				this.workoutList.get(workoutNum).setStartTime(current);
 			}

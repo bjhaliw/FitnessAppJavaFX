@@ -280,6 +280,14 @@ public class ReadAndWrite extends Application {
 		fillInExtraRows(workbook, headerCellStyle, numColumnsTotal);
 	}
 	
+	/** 
+	 * Saves information to a supplied path
+	 * @param tracker
+	 * @param list
+	 * @param path
+	 * @return
+	 * @throws IOException
+	 */
 	public static boolean saveAllInformation(WorkoutTracker tracker, ExerciseList list, String path) throws IOException {
 		boolean value = false;
 		
@@ -305,6 +313,12 @@ public class ReadAndWrite extends Application {
 		return value;
 	}
 
+	/**
+	 * Saves all information to previously defined directory path
+	 * @param tracker
+	 * @param list
+	 * @throws IOException
+	 */
 	public static void saveAllInformation(WorkoutTracker tracker, ExerciseList list) throws IOException {
 		Application.launch(ReadAndWrite.class);
 
